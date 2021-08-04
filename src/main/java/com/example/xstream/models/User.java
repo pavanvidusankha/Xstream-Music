@@ -1,8 +1,22 @@
 package com.example.xstream.models;
 
+import javax.persistence.*;
+
+@Entity(name = "user_entity")
+@Table(name = "user_entity" )
 public class User {
-    private String uname;
+    @Id
+    @SequenceGenerator(
+            name="user_sequence",
+            sequenceName="user_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator="user_sequence"
+    )
     private long id;
+    private String uname;
     private String fname;
     private String lname;
     private String email;
