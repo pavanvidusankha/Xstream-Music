@@ -1,10 +1,12 @@
 package com.example.xstream.models;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
-@Table (name = "artist")
+@Table (name = "artists")
 public class Artist {
 
     @Id
@@ -21,6 +23,15 @@ public class Artist {
     private String name;
     private String country;
     private String genre;
+
+
+    @OneToMany
+    @JoinColumn(name = "artist_id")
+    private Set<Album> albums= new HashSet<>();
+
+    @OneToMany
+    @JoinColumn(name = "artist_id")
+    private Set<Song> songs= new HashSet<>();
 
     public Artist() {
     }
