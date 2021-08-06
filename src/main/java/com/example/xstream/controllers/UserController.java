@@ -1,7 +1,6 @@
 package com.example.xstream.controllers;
 
 import com.example.xstream.models.User;
-import com.example.xstream.repositories.UserRepository;
 import com.example.xstream.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
