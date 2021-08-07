@@ -14,7 +14,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private  UserRepository userRepository;
-    //privte final UserServiceImpl userService;
     @Autowired
     public UserServiceImpl (UserRepository userRepository){
         this.userRepository=userRepository;
@@ -67,5 +66,10 @@ public class UserServiceImpl implements UserService {
 
 
 
+    }
+
+    @Override
+    public User getUser(long id) {
+        return userRepository.findById(id).orElseThrow(()-> new IllegalStateException("User with ID "+ id +" is not found"));
     }
 }

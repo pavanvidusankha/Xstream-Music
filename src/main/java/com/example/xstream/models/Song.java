@@ -22,6 +22,7 @@ public class Song {
     private String name;
     private Integer duration;
     private String genre;
+
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,

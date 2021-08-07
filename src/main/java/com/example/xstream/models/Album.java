@@ -14,17 +14,21 @@ public class Album {
 
     @Id
     @SequenceGenerator(
-            name="user_sequence",
-            sequenceName="user_sequence",
+            name="album_sequence",
+            sequenceName="album_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator="user_sequence"
+            generator="album_sequence"
     )
     private long id;
     private String name;
     private String genre;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column( nullable = false)
+    private Date releasedDate;
 
     public Album() {
     }
@@ -86,7 +90,7 @@ public class Album {
         this.artist = artist;
     }
 
-    private Date releasedDate;
+
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "artist_id",nullable = false)
