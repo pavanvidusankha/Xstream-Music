@@ -92,12 +92,12 @@ public class Album {
 
 
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "artist_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Artist artist;
-
-    @ManyToMany(fetch = FetchType.LAZY,
+//fetch=FetchType.LAZY
+    @ManyToMany(
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE

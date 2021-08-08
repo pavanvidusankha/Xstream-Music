@@ -23,7 +23,7 @@ public class Song {
     private Integer duration;
     private String genre;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE

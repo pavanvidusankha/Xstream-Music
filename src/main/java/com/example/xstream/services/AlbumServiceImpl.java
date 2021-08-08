@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -25,9 +27,10 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public void addNewAlbum(Album album,long artistId) {
-        albumRepository.save(album);
+
         Artist artist=artistRepository.findById(artistId).orElseThrow(()-> new IllegalStateException("Artist ID "+artistId +" does not exists"));
         album.setArtist(artist);
+        albumRepository.save(album);
     }
 
     @Override
@@ -83,11 +86,28 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public List<Album> getAlbumsByGenre(String genre) {
 
-        return (List<Album>) albumRepository.findAlbumsByGenre(genre);
+        return  albumRepository.findAlbumsByGenreIgnoreCase(genre);
     }
 
     @Override
-    public Set<Album>  getAlbumsByArtist(long id) {
+    public List<Album> getAlbumsByReleasedDate(Date date) {
+        return albumRepository.findAlbumsByReleasedDateIsContaining(date);
+    }
+
+    @Override
+    public List<Album> getAlbumsByArtist(long id) {
         return albumRepository.findAlbumsByArtist_Id(id);
     }
+
+    @Override
+    public List<Album> getAlbumsBy(String albumName, String genre, String releasedDate) throws ParseException {
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+
+        Date year=  yearFormat.parse(releasedDate);
+        Date afterYear=  yearFormat.parse(Integer.toString((Integer.parseInt(releasedDate)+1)));
+
+        return albumRepository.findAlbumsByReleasedDateBetweenOrGenreOrNameIgnoreCase(year,afterYear,genre,albumName);
+    }
+
+
 }
