@@ -41,6 +41,13 @@ public class SongServiceImpl implements SongService{
     }
 
     @Override
+    public Song getSongfromAlbumTrackID(long albumId, long trackId) {
+        Album album= albumRepository.findById(albumId).orElseThrow(()-> new IllegalStateException("Album ID "+albumId+" doesnt exists"));
+
+       return (Song) album.getSongs().stream().filter((song -> song.getId()==trackId));
+    }
+
+    @Override
     public List<Song> getSongs() {
         return songRepository.findAll();
     }
@@ -83,10 +90,10 @@ public class SongServiceImpl implements SongService{
     }
 
     @Override
-    public List<Song> getSongsBy(String albumName, String genre, String artistName) throws ParseException {
-        Album album = albumRepository.findAlbumByName(albumName);
-        Artist artist = artistRepository.findArtistByName(artistName);
-        //return songRepository.getSongsByArtistsOrAlbumsOrGenreIgnoreCase(artist,album,genre);
-        return null;
+    public List<Song> getSongsBy(String name, String genre, String duration) throws ParseException {
+        //Album album = albumRepository.findAlbumByName(albumName);
+       // Artist artist = artistRepository.findArtistByName(artistName);
+        return songRepository.getSongsByGenreOrDurationOrNameIgnoreCase(name,Integer.parseInt(duration),genre);
+        //return null;
     }
 }

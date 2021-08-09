@@ -21,9 +21,9 @@ public class SongController {
         this.songService = songService;
     }
 
-    @GetMapping("/artists/albums/{albumId}/songs/{songId}")
-    public Song getSong(@PathVariable("songId") long id) {
-        return songService.getSong(id);
+    @GetMapping("/artists/{artistId}/albums/{albumId}/songs/{songId}")
+    public Song getSong(@PathVariable("songId") long songId,@PathVariable("albumId") long albumId) {
+        return songService.getSongfromAlbumTrackID(albumId,songId);
     }
 
     @GetMapping("/artists/{artistId}/songs")

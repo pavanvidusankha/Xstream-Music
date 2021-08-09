@@ -14,6 +14,6 @@ public interface SongRepository extends JpaRepository<Song,Long> {
     Set<Song> getSongsByAlbums(long album_id);
     Set<Song> getSongsByGenre(String genre);
     List<Song> getSongsByArtist_Id(long id);
-    //Set<Song> getSongsByArtistsOrAlbumsOrGenreIgnoreCase(Artist artist, Album album, String genre);
-
+    //List<Song> getSongsByArtistsOrAlbumsOrGenreIgnoreCase(Artist artist, Album album, String genre);
+List<Song> getSongsByGenreOrDurationOrNameIgnoreCase(String genre,int duration,String name);   //Set<Song> getSongsByArtist_NameOrGenreOrAlbum_Name()
 }

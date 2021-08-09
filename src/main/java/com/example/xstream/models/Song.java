@@ -24,20 +24,21 @@ public class Song {
     private Integer duration;
     private String genre;
 
-    @ManyToMany(
-            cascade = {
-
-                    CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "album_songs",
-            joinColumns = {
-                    @JoinColumn(name = "song_id")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "album_id")
-            }
-    )
+    @ManyToMany
+            //(
+//            cascade = {
+//
+//                    CascadeType.MERGE
+//            })
+//    @JoinTable(
+//            name = "album_songs",
+//            joinColumns = {
+//                    @JoinColumn(name = "song_id")
+//            },
+//            inverseJoinColumns = {
+//                    @JoinColumn(name = "album_id")
+//            }
+//    )
     private Set<Album> albums =new HashSet<>();
     @ManyToOne
     private Artist artist;

@@ -1,8 +1,6 @@
 package com.example.xstream.models;
-
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -91,8 +89,6 @@ public class Album {
         this.artist = artist;
     }
 
-
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "artist_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -105,7 +101,15 @@ public class Album {
 //
 //    @JoinTable(name = "album_songs",
 //            joinColumns = { @JoinColumn(name = "song_id") },
-//            inverseJoinColumns = { @JoinColumn(name = "album_id") })
-    @ManyToMany(mappedBy = "songs", cascade = { CascadeType.MERGE })
+//            inverseJoinColumns = { @JoinColumn(name = "album_id") }) , cascade = { CascadeType.MERGE }
+    @ManyToMany
     private Set<Song> songs=new HashSet<>();
+
+    public Set<Song> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(Set<Song> songs) {
+        this.songs = songs;
+    }
 }
