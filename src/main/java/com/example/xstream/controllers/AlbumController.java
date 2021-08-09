@@ -27,8 +27,13 @@ public class AlbumController {
     }
 
     @GetMapping("/artists/{artistId}/albums")
-    public List<Album> getAlbumByArtistId(@PathVariable("artistId") long artistId) {
+    public List<Album> getAlbumsByArtistId(@PathVariable("artistId") long artistId) {
         return albumService.getAlbumsByArtist(artistId);
+    }
+
+    @GetMapping("/artists/{artistId}/albums/{albumId}")
+    public Album getAlbumById(@PathVariable("albumId") long albumId) {
+        return albumService.getAlbum(albumId);
     }
 
     @GetMapping("/albums")

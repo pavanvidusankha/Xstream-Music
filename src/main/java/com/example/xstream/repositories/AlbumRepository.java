@@ -18,5 +18,5 @@ public interface AlbumRepository extends JpaRepository<Album,Long> {
     //List<Album> findAlbumsByGenreOrReleasedDateOrNameIgnoreCase(String genre,Date releasedDate,String name);
     //List<Album> findAlbumsByReleasedDateLessThanEqualAndReleasedDateGreaterThanEqualOrGenreOrNameIgnoreCase(Date releasedDate, Date yearAfterReleasedDate, String genre, String name);
     List<Album> findAlbumsByReleasedDateBetweenOrGenreOrNameIgnoreCase(Date releasedDate, Date yearAfterReleasedDate, String genre, String name);
-
+    Album findAlbumByName(String name);
 }

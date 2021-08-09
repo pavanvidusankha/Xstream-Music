@@ -18,6 +18,7 @@ public class Song {
             strategy = GenerationType.SEQUENCE,
             generator="song_sequence"
     )
+    @Column(name = "song_id")
     private long id;
     private String name;
     private Integer duration;
@@ -25,9 +26,18 @@ public class Song {
 
     @ManyToMany(
             cascade = {
-                    CascadeType.PERSIST,
+
                     CascadeType.MERGE
-            },mappedBy ="songs" )
+            })
+    @JoinTable(
+            name = "album_songs",
+            joinColumns = {
+                    @JoinColumn(name = "song_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "album_id")
+            }
+    )
     private Set<Album> albums =new HashSet<>();
     @ManyToOne
     private Artist artist;
@@ -36,8 +46,7 @@ public class Song {
     public Song() {
     }
 
-    public Song(long id, String name, Integer duration, String genre) {
-        this.id = id;
+    public Song(String name, Integer duration, String genre) {
         this.name = name;
         this.duration = duration;
         this.genre = genre;

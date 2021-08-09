@@ -22,6 +22,7 @@ public class Album {
             strategy = GenerationType.SEQUENCE,
             generator="album_sequence"
     )
+    @Column(name = "album_id")
     private long id;
     private String name;
     private String genre;
@@ -97,15 +98,14 @@ public class Album {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Artist artist;
 //fetch=FetchType.LAZY
-    @ManyToMany(
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-
-    @JoinTable(name = "album_songs",
-            joinColumns = { @JoinColumn(name = "song_id") },
-            inverseJoinColumns = { @JoinColumn(name = "album_id") })
-
+//    @ManyToMany(
+//            cascade = {
+//                    CascadeType.ALL
+//            })
+//
+//    @JoinTable(name = "album_songs",
+//            joinColumns = { @JoinColumn(name = "song_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "album_id") })
+    @ManyToMany(mappedBy = "songs", cascade = { CascadeType.MERGE })
     private Set<Song> songs=new HashSet<>();
 }
