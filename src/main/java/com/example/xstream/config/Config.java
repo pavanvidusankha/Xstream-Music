@@ -1,13 +1,7 @@
 package com.example.xstream.config;
 
-import com.example.xstream.models.Album;
-import com.example.xstream.models.Artist;
-import com.example.xstream.models.Song;
-import com.example.xstream.models.User;
-import com.example.xstream.repositories.AlbumRepository;
-import com.example.xstream.repositories.ArtistRepository;
-import com.example.xstream.repositories.SongRepository;
-import com.example.xstream.repositories.UserRepository;
+import com.example.xstream.models.*;
+import com.example.xstream.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +14,10 @@ import java.util.List;
 import java.util.Locale;
 
 @Configuration
-public class studentConfig {
+public class Config {
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository userRepository, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository) throws ParseException {
+    CommandLineRunner commandLineRunner(UserRepository userRepository, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return args -> {
             User pavan = new User("psam", "Pavan", "Samaranayake", "psam@xstream.com");
@@ -59,18 +53,39 @@ public class studentConfig {
             //System.out.println(yearFormat.parse(Integer.toString(1996)));
             Song song=new Song("Can't Feel My Face",240,"Pop");
             song.getAlbums().add(weekndAlbum);
+            weekndAlbum.getSongs().add(song);
             song.setArtist(artist);
 
             Song song1=new Song("The hills",270,"Pop");
             song1.getAlbums().add(weekndAlbum);
+            weekndAlbum.getSongs().add(song1);
             song1.setArtist(artist);
 
             Song song3=new Song("Jeremy",450,"Grunge");
             song3.getAlbums().add(pAlbum);
+            pAlbum.getSongs().add(song3);
             song3.setArtist(artist3);
 
             songRepository.saveAll(List.of(song1,song,song3));
 
+
+            //playlists
+            Playlist playlist1=new Playlist("Pop Songs");
+            playlist1.setUser(pavan);
+           //pavan.getUserPlaylists().add(playlist1);
+
+            playlist1.getPlaylistSongs().add(song);
+            playlist1.getPlaylistSongs().add(song1);
+
+            Playlist playlist2=new Playlist("ROCK");
+            playlist2.setUser(test);
+           //test.getUserPlaylists().add(playlist2);
+            playlist2.getPlaylistSongs().add(song3);
+
+//        playlistRepository.saveAll(List.of(playlist1,playlist2));
+
+
+            //pavan.setEmail("pavan@xtream.com");
         };
     }
 }

@@ -1,9 +1,12 @@
 package com.example.xstream.models;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity(name = "user_entity")
-@Table(name = "user_entity" )
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "users" )
 public class User {
     @Id
     @SequenceGenerator(
@@ -15,6 +18,7 @@ public class User {
             strategy = GenerationType.SEQUENCE,
             generator="user_sequence"
     )
+    @Column(name="user_id")
     private long id;
     private String uname;
     private String fname;
@@ -89,4 +93,15 @@ public class User {
         this.lname = lname;
         this.email = email;
     }
+
+    public List<Playlist> getUserPlaylists() {
+        return userPlaylists;
+    }
+
+    public void setUserPlaylists(List<Playlist> userPlaylists) {
+        this.userPlaylists = userPlaylists;
+    }
+    @JsonIgnore
+    @OneToMany
+    private List<Playlist> userPlaylists;
 }

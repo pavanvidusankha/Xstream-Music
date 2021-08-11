@@ -1,7 +1,6 @@
 package com.example.xstream.services;
 
 import com.example.xstream.models.Album;
-import com.example.xstream.models.Artist;
 import com.example.xstream.models.Song;
 import com.example.xstream.repositories.AlbumRepository;
 import com.example.xstream.repositories.ArtistRepository;
@@ -27,10 +26,11 @@ public class SongServiceImpl implements SongService{
     }
 
     public void AddSong(Song song,long albumId){
-        Album optionalAlbum=albumRepository.findById(albumId).orElseThrow(()-> new IllegalStateException("Album ID "+albumId+" doesnt exists"));
+        Album songAlbum=albumRepository.findById(albumId).orElseThrow(()-> new IllegalStateException("Album ID "+albumId+" doesnt exists"));
 
-        song.getAlbums().add(optionalAlbum);
-        song.setArtist(optionalAlbum.getArtist());
+        song.getAlbums().add(songAlbum);
+        songAlbum.getSongs().add(song);
+        song.setArtist(songAlbum.getArtist());
 
         songRepository.save(song);
     }
@@ -91,9 +91,8 @@ public class SongServiceImpl implements SongService{
 
     @Override
     public List<Song> getSongsBy(String name, String genre, String duration) throws ParseException {
-        //Album album = albumRepository.findAlbumByName(albumName);
-       // Artist artist = artistRepository.findArtistByName(artistName);
+
         return songRepository.getSongsByGenreOrDurationOrNameIgnoreCase(name,Integer.parseInt(duration),genre);
-        //return null;
+
     }
 }
