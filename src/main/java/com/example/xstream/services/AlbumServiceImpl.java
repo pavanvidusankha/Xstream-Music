@@ -17,13 +17,14 @@ public class AlbumServiceImpl implements AlbumService {
 
 
     private final AlbumRepository albumRepository;
-    @Autowired
     private  ArtistRepository artistRepository;
 
 
     @Autowired
-    public AlbumServiceImpl(AlbumRepository albumRepository) {
+    public AlbumServiceImpl(AlbumRepository albumRepository,ArtistRepository artistRepository) {
+
         this.albumRepository = albumRepository;
+        this.artistRepository=artistRepository;
     }
 
     @Override
@@ -69,13 +70,6 @@ public class AlbumServiceImpl implements AlbumService {
         if(releasedDate!=null && !Objects.equals(album.getReleasedDate(),releasedDate)){
             album.setReleasedDate(releasedDate);
         }
-
-//        if(artistId!=null  && !Objects.equals(album.getArtist().getId(),artistId)){
-//
-//            Use
-//            album.setArtist(email);
-//        }
-        
 
     }
 

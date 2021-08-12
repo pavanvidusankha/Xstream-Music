@@ -44,7 +44,7 @@ class UserRepositoryTest {
         boolean exists = testUserRepository.existsById(user_id);
 
         //then
-        assertThat(exists).isTrue();
+        assertThat(exists).isFalse();
 
     }
 }

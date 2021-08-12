@@ -85,9 +85,11 @@ class UserControllerTest {
     @Test
     void updateUser() throws Exception {
 
+        String patchInJson = "{\"lname\":\"Holder\"}";
+//asJsonString(new User("alex1", "Alex", "Holder", "alex@gmail.com")
         mockMvc.perform( MockMvcRequestBuilders
                 .patch("/users/{id}", 2)
-                .content(asJsonString(new User("alex1", "Alex", "Holder", "alex@gmail.com")))
+                .content(patchInJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

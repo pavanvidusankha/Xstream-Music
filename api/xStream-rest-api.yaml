@@ -1,0 +1,1014 @@
+---
+openapi: 3.0.0
+info:
+  title: Xstream Music
+  description: |
+    xStream is a music streaming service.This depicts all endpoints of the rest API of the system.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: xstream@xstream.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1"
+servers:
+- url: https://virtserver.swaggerhub.com/pavanvidusankha/xStream/1
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: songs
+  description: find all info on stored songs
+- name: artists
+  description: find all the  artists on the music library
+- name: users
+  description: operations about users
+- name: albums
+  description: get access to the musical albums on the library
+- name: playlists
+  description: operations about user created playlists
+paths:
+  /artists:
+    get:
+      tags:
+      - artists
+      summary: get artists info
+      description: get the all artists info
+      operationId: getArtists
+      parameters:
+      - name: genre
+        in: query
+        description: search by genre 
+        schema:
+          type: string 
+      - name: name
+        in: query
+        description: search by name 
+        schema:
+          type: string     
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artist'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - artists
+      summary: Add new artists to the library
+      description: Add new artists
+      operationId: addArtist
+      requestBody:
+        description: artist to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+      responses:
+        "201":
+          description: artist created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing artist already exists
+  /artists/{artistId}:
+    get:
+      tags:
+      - artists
+      summary: Get artist by ID
+      operationId: getArtistById
+      parameters:
+      - name: artistId
+        in: path
+        description: The name that needs to be fetched.  .
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        "400":
+          description: Invalid artist supplied
+        "404":
+          description: artist not found
+    put:
+      tags:
+      - artists
+      summary: Update artist by ID
+      description: update the artist.
+      operationId: updateArtist
+      parameters:
+      - name: artistId
+        in: path
+        description: name that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: genre
+        in: query
+        description: genre that need to be updated
+        schema:
+          type: string  
+      - name: country
+        in: query
+        description: country that need to be updated
+        schema:
+          type: string         
+      requestBody:
+        description: Updated artist object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        required: true
+      responses:
+        "400":
+          description: Invalid artist supplied
+        "404":
+          description: artist not found
+    patch:
+      tags:
+      - artists
+      summary: Update artist by ID
+      description: update the artist.
+      operationId: updateArtist
+      parameters:
+      - name: artistId
+        in: path
+        description: name that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated artist object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        required: true
+      responses:
+        "400":
+          description: Invalid artist supplied
+        "404":
+          description: artist not found
+    delete:
+      tags:
+      - artists
+      summary: Delete artist
+      operationId: deleteArtist
+      parameters:
+      - name: artistId
+        in: path
+        description: The artist name that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid artist supplied
+        "404":
+          description: artist not found
+  /songs:
+    get:
+      tags:
+      - songs
+      summary: get all songs
+      description: |
+        get the songs from the library
+      operationId: getSong
+      parameters:
+      - name: searchString
+        in: query
+        description: pass an optional search string for looking up inventory
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: number of records to skip for pagination
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: genre
+        in: query
+        description: search by genre
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 0
+          type: string
+      - name: album
+        in: query
+        description: search by album
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 0
+          type: string
+      - name: year
+        in: query
+        description: search by year
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 0
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - songs
+      summary: Add new songs to the library
+      description: Add new songs
+      operationId: addSong
+      requestBody:
+        description: song to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing song already exists
+  /songs/{id}:
+    get:
+      tags:
+      - songs
+      summary: Get song by ID
+      operationId: getSongById
+      parameters:
+      - name: id
+        in: path
+        description: The id of the song that needs to be fetched.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Song'
+        "400":
+          description: Invalid song supplied
+        "404":
+          description: song not found
+    put:
+      tags:
+      - songs
+      summary: Update song by ID
+      description: update the song.
+      operationId: updateSong
+      parameters:
+      - name: id
+        in: path
+        description: song ID that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: name
+        in: query
+        description: name that need to be updated
+        schema:
+          type: string  
+      - name: duration
+        in: query
+        description: song duration that need to be updated
+        schema:
+          type: integer  
+      - name: genre
+        in: query
+        description: song genre that need to be updated
+        schema:
+          type: string                
+      requestBody:
+        description: Updated song object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      responses:
+        "400":
+          description: Invalid song supplied
+        "404":
+          description: song not found
+    patch:
+      tags:
+      - songs
+      summary: Update song by ID
+      description: update the song.
+      operationId: updateSong
+      parameters:
+      - name: id
+        in: path
+        description: song ID that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: name
+        in: query
+        description: name that need to be updated
+        schema:
+          type: string  
+      - name: duration
+        in: query
+        description: song duration that need to be updated
+        schema:
+          type: integer  
+      - name: genre
+        in: query
+        description: song genre that need to be updated
+        schema:
+          type: string       
+      requestBody:
+        description: Updated song object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      responses:
+        "400":
+          description: Invalid song supplied
+        "404":
+          description: song not found      
+    delete:
+      tags:
+      - songs
+      summary: Delete song by ID
+      operationId: deleteSong
+      parameters:
+      - name: id
+        in: path
+        description: The song name that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid song supplied
+        "404":
+          description: song not found
+  /artists/{artistId}/albums/{albumId}/songs/{songsId}:
+    get:
+      tags:
+      - songs
+      summary: Get artist by ID
+      operationId: getArtistById
+      parameters:
+      - name: artistId
+        in: path
+        description: The name that needs to be fetched.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        "400":
+          description: Invalid artist supplied
+        "404":
+          description: artist not found        
+  /albums:
+    get:
+      tags:
+      - albums
+      summary: get album info
+      description: |
+        get the albums from the library
+      operationId: getAlbum
+      parameters:
+      - name: artistId
+        in: query
+        description: search by artist Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: genre
+        in: query
+        description: search by genre
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: number of records to skip for pagination
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - name: year
+        in: query
+        description: search by year
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Album'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - albums
+      summary: Add new albums to the library
+      description: Add new album
+      operationId: addAlbum
+      requestBody:
+        description: album to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing album already exists
+  /albums/{albumId}:
+    get:
+      tags:
+      - albums
+      summary: Get album by ID
+      operationId: getAlbumById
+      parameters:
+      - name: albumId
+        in: path
+        description: The name that needs to be fetched. 
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Album'
+        "400":
+          description: Invalid album supplied
+        "404":
+          description: album not found
+    put:
+      tags:
+      - albums
+      summary: Update album
+      description: update the album.
+      operationId: updateAlbum
+      parameters:
+      - name: albumId
+        in: path
+        description: name that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated song object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+        required: true
+      responses:
+        "400":
+          description: Invalid album supplied
+        "404":
+          description: album not found
+    patch:
+      tags:
+      - albums
+      summary: Update album
+      description: update the album.
+      operationId: updateAlbum
+      parameters:
+      - name: albumId
+        in: path
+        description: name that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated song object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+        required: true
+      responses:
+        "400":
+          description: Invalid album supplied
+        "404":
+          description: album not found      
+    delete:
+      tags:
+      - albums
+      summary: Delete album
+      operationId: deleteAlbum
+      parameters:
+      - name: albumId
+        in: path
+        description: The album name that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid album supplied
+        "404":
+          description: album not found
+  /users:
+    post:
+      tags:
+      - users
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        default:
+          description: successful operation
+  /users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Get user by user ID
+      operationId: getUserById
+      parameters:
+      - name: userId
+        in: path
+        description: The name that needs to be fetched.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: name
+        in: query
+        description: name that need to be updated
+        schema:
+          type: string      
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+    put:
+      tags:
+      - users
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
+        description: user that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "400":
+          description: Invalid user supplied
+        "404":
+          description: User not found
+    patch:
+      tags:
+      - users
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
+        description: user that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "400":
+          description: Invalid user supplied
+        "404":
+          description: User not found      
+    delete:
+      tags:
+      - users
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+      - name: userId
+        in: path
+        description: user that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid userId supplied
+        "404":
+          description: User not found
+  /playlists:
+    get:
+      tags:
+      - playlists
+      summary: get all playlists
+      description: |
+        get the playlists from the library
+      operationId: getPlaylist
+      parameters:
+      - name: username
+        in: query
+        description: search by uname
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: skip
+        in: query
+        description: number of records to skip for pagination
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Playlist'
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - playlists
+      summary: Add new playlist to the library
+      description: Add new playlist
+      operationId: addPlaylist
+      requestBody:
+        description: playlist to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+      responses:
+        "201":
+          description: item created
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing playlist already exists
+  /playlists/{id}:
+    get:
+      tags:
+      - playlists
+      summary: Get playlist by id
+      operationId: getPlaylistById
+      parameters:
+      - name: id
+        in: path
+        description: The name that needs to be fetched.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        "400":
+          description: Invalid playlist supplied
+        "404":
+          description: playlist not found
+    put:
+      tags:
+      - playlists
+      summary: Update playlist
+      description: update the playlist.
+      operationId: updatePlaylist
+      parameters:
+      - name: id
+        in: path
+        description: id that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated playlist object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+        required: true
+      responses:
+        "400":
+          description: Invalid playlist supplied
+        "404":
+          description: playlist not found
+    patch:
+      tags:
+      - playlists
+      summary: Update playlist
+      description: update the playlist.
+      operationId: updatePlaylist
+      parameters:
+      - name: id
+        in: path
+        description: id that need to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Updated playlist object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+        required: true
+      responses:
+        "400":
+          description: Invalid playlist supplied
+        "404":
+          description: playlist not found      
+    delete:
+      tags:
+      - playlists
+      summary: Delete playlist
+      operationId: deletePlaylist
+      parameters:
+      - name: id
+        in: path
+        description: The playlist id that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid playlist supplied
+        "404":
+          description: playlist not found
+components:
+  schemas:
+    Song:
+      required:
+      - album
+      - artist
+      - duration
+      - genre
+      - id
+      - name
+      - releaseDate
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Can't Feel My Face
+        releaseDate:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        artist:
+          $ref: '#/components/schemas/Artist'
+        album:
+          $ref: '#/components/schemas/Album'
+        genre:
+          type: array
+          items:
+            type: string
+    Artist:
+      required:
+      - country
+      - genre
+      - name
+      - songs
+      type: object
+      properties:
+        name:
+          type: string
+          example: The Weeknd
+        genre:
+          type: array
+          example: Pop
+          items:
+            type: string
+        country:
+          type: string
+          example: Canada
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Song'
+    Album:
+      required:
+      - artist
+      - genre
+      - name
+      - releasedDate
+      - songs
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: Beauty Behind The Madness
+        genre:
+          type: string
+          example: Pop
+        artist:
+          $ref: '#/components/schemas/Artist'
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Song'
+        releasedDate:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+      xml:
+        name: Album
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+      xml:
+        name: User
+    Playlist:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Song'
+        public:
+          type: boolean
+      xml:
+        name: Playlist

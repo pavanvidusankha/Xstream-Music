@@ -83,8 +83,8 @@ public class Config {
             playlist2.getPlaylistSongs().add(song3);
 
         playlistRepository.saveAll(List.of(playlist1,playlist2));
-       // playlistRepository.deleteAllByUser(test);
-       // userRepository.delete(test);
+        //playlistRepository.deleteAllByUser(test);
+       //userRepository.delete(test);
 
             //pavan.setEmail("pavan@xtream.com");
         };
