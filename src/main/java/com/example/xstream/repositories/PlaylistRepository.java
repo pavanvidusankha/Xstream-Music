@@ -11,4 +11,5 @@ import java.util.List;
 public interface PlaylistRepository extends JpaRepository<Playlist,Long> {
     List<Playlist> getPlaylistsByUser(User user);
     List<Playlist> getPlaylistsByName(String name);
+    List<Playlist> deleteAllByUser(User user);
 }

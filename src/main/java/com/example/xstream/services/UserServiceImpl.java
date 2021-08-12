@@ -1,6 +1,7 @@
 package com.example.xstream.services;
 
 import com.example.xstream.models.User;
+import com.example.xstream.repositories.PlaylistRepository;
 import com.example.xstream.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private  UserRepository userRepository;
+    private PlaylistRepository playlistRepository;
     @Autowired
-    public UserServiceImpl (UserRepository userRepository){
+    public UserServiceImpl (UserRepository userRepository,PlaylistRepository playlistRepository){
         this.userRepository=userRepository;
+        this.playlistRepository=playlistRepository;
     }
 
 
@@ -40,7 +44,7 @@ public class UserServiceImpl implements UserService {
         if(!userExists){
             throw new IllegalStateException("user id "+userId+"does not exists");
         }
-
+        playlistRepository.deleteAllByUser(getUser(userId));
         userRepository.deleteById(userId);
     }
 

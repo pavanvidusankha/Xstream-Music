@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.*;
 
 @Service
+@Transactional
 public class SongServiceImpl implements SongService{
 
     private final SongRepository songRepository;

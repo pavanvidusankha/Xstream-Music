@@ -1,6 +1,7 @@
 package com.example.xstream.services;
 
 import com.example.xstream.models.User;
+import com.example.xstream.repositories.PlaylistRepository;
 import com.example.xstream.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,11 +23,12 @@ class UserServiceImplTest {
     UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
+    private PlaylistRepository playlistRepository;
 
     @BeforeEach
     void setUp() {
 //        autoClosable = MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository,playlistRepository);
 
     }
 

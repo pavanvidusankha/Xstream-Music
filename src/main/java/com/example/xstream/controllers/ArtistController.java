@@ -1,10 +1,12 @@
 package com.example.xstream.controllers;
+
 import com.example.xstream.models.Artist;
 import com.example.xstream.services.ArtistServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping(path = "/artists")
 public class ArtistController {
@@ -16,9 +18,12 @@ public class ArtistController {
     }
 
     @GetMapping
-    public List<Artist> getArtists() {
+    public List<Artist> getArtists(@RequestParam(required = false) String name) {
 
-        return artistServiceImpl.getArtists();
+        if (name != null) {
+            return artistServiceImpl.findArtistsByName(name);
+        } else
+            return artistServiceImpl.getArtists();
     }
 
     @GetMapping(path = "/{artistId}")
@@ -38,11 +43,11 @@ public class ArtistController {
 
     @PutMapping(path = "/{artistId}")
     public void updateArtist(@PathVariable("artistId") long id, @RequestParam(required = false) String country, @RequestParam(required = false) String genre, @RequestParam(required = false) String name) {
-        artistServiceImpl.updateArtist(id, name,country,genre);
+        artistServiceImpl.updateArtist(id, name, country, genre);
     }
 
     @PatchMapping(path = "/{artistId}")
     public void putArtist(@PathVariable("artistId") long id, @RequestParam(required = false) String country, @RequestParam(required = false) String genre, @RequestParam(required = false) String name) {
-        artistServiceImpl.updateArtist(id, name,country,genre);
+        artistServiceImpl.updateArtist(id, name, country, genre);
     }
 }

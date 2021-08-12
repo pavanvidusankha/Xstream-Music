@@ -82,8 +82,9 @@ public class Config {
            //test.getUserPlaylists().add(playlist2);
             playlist2.getPlaylistSongs().add(song3);
 
-//        playlistRepository.saveAll(List.of(playlist1,playlist2));
-
+        playlistRepository.saveAll(List.of(playlist1,playlist2));
+       // playlistRepository.deleteAllByUser(test);
+       // userRepository.delete(test);
 
             //pavan.setEmail("pavan@xtream.com");
         };

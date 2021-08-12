@@ -1,12 +1,18 @@
 package com.example.xstream.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-
+@Data
+@AllArgsConstructor
 @Entity
 @Table(name = "users" )
+@Builder
 public class User {
     @Id
     @SequenceGenerator(

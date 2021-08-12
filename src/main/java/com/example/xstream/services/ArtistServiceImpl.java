@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Transactional
 public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistRepository artistRepository;
@@ -63,5 +64,10 @@ public class ArtistServiceImpl implements ArtistService {
     public Artist getArtist(long id) {
         return artistRepository.findById(id).orElseThrow(() -> new IllegalStateException("Artist with ID " + id + " is not found"));
 
+    }
+
+    @Override
+    public List<Artist> findArtistsByName(String name) {
+        return artistRepository.findArtistsByName(name);
     }
 }

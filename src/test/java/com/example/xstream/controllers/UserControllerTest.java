@@ -1,91 +1,126 @@
 package com.example.xstream.controllers;
 
-import org.json.JSONException;
+import com.example.xstream.models.User;
+import com.example.xstream.services.UserServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@ExtendWith(SpringExtension.class)
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
 class UserControllerTest {
 
     @Autowired
-//    private MockMvc mockMvc;
-
-
-
-
-
-    @LocalServerPort
-    private int port;
-
-    TestRestTemplate restTemplate = new TestRestTemplate();
-
-    HttpHeaders headers = new HttpHeaders();
+    MockMvc mockMvc;
+    @Mock
+    UserServiceImpl userService;
 
     @Test
     void getUsers() throws Exception {
-        mockMvc.perform(get("/users")).andExpect(status().isOk());
-        //andExpect(content().string(containsString("pavan")));
+        mockMvc.perform(get("/users")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty());
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect((ResultMatcher) jsonPath("$.id").value(1L))
+//               .andExpect((ResultMatcher) jsonPath("$.uname").value("psam"))
+//              .andExpect((ResultMatcher) jsonPath("$.email").value("psam@xtream.com"));
+//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/1")
+//                .contentType(MediaType.APPLICATION_JSON);
+
+//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+//        System.out.println(result.getResponse());
     }
 
     @Test
-    void getUser() throws JSONException {
-        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/users/1"), HttpMethod.GET, entity, String.class);
-
-        String expected = "{\"id\":1,\"first name\":\"Pavan\"}";
-
-        JSONAssert.assertEquals(expected, response.getBody(), false);
+    void getUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/users/{id}", 1)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
     }
 
     @Test
     void registerNewUser() throws Exception {
-        mockMvc.perform(post("/users")).andExpect(status().is2xxSuccessful());
-    }
-
-    private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
-    }
-
-    @Test
-    void deleteUser() throws Exception {
-        //Mockito.when(patientRecordRepository.findById(RECORD_2.getPatientId())).thenReturn(Optional.of(RECORD_2));
 
         mockMvc.perform(MockMvcRequestBuilders
-                .delete("/users/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .post("/users")
+                .content(asJsonString(new User("ahales", "alex", "holder", "aholder@gmail.com")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
     }
 
     @Test
-    void updateUser() {
+
+    void deleteUser() throws Exception {
+        mockMvc.perform( MockMvcRequestBuilders.delete("/users/{id}", 2) )
+                .andExpect(status().isAccepted());
+
     }
 
     @Test
-    void putUser() {
+    void updateUser() throws Exception {
+
+        mockMvc.perform( MockMvcRequestBuilders
+                .patch("/users/{id}", 2)
+                .content(asJsonString(new User("alex1", "Alex", "Holder", "alex@gmail.com")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lname").value("Holder"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fname").value("Alex"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("alex@gmail.com"));
+    }
+
+    @Test
+    void putUser() throws Exception {
+
+//        User updatedUser = User.builder().id(2).fname("Alex").lname("Holder").email("alex@gmail.com").build();
+
+        //mockito
+//        Mockito.when(use.findById(RECORD_1.getPatientId())).thenReturn(Optional.of(RECORD_1));
+//        Mockito.when(patientRecordRepository.save(updatedRecord)).thenReturn(updatedRecord);
+
+        mockMvc.perform( MockMvcRequestBuilders
+                .put("/users/{id}", 2)
+                .content(asJsonString(new User(null,"Alex","Holder","alex@gmail.com")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fname").value("Alex"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lname").value("Holder"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("alex@gmail.com"));
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
