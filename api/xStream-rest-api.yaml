@@ -893,6 +893,44 @@ paths:
           description: Invalid playlist supplied
         "404":
           description: playlist not found
+  /users/{userId}/playlists/{playlistId}/removeSong/{songId} :
+    delete:
+      tags:
+      - playlists
+      summary: Delete songs from playlist
+      operationId: deleteSongFromPlaylist
+      parameters:
+      - name: playlistId
+        in: path
+        description: The playlist id 
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: userId
+        in: path
+        description: The user id 
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer    
+      - name: songId
+        in: path
+        description: The song id that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer        
+      responses:
+        "400":
+          description: Invalid playlist supplied
+        "404":
+          description: playlist not found
+
+
 components:
   schemas:
     Song:

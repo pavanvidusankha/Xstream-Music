@@ -58,13 +58,13 @@ public class PlaylistController {
     public List<Playlist> getPlaylistsByUser(@PathVariable("userId") long userId){
       return   playlistService.getPlaylistByUser(userId);
     }
-    @PatchMapping("/users/{userId}/playlists/{playlistId}/addSong/{songId}")
-    public void addSongToPlaylist(@PathVariable ("playlistId") long playlistId,@PathVariable ("userId") long userId,@PathVariable ("songId") long songId){
+    @PostMapping("/users/{userId}/playlists/{playlistId}/addSong")
+    public void addSongToPlaylist(@PathVariable ("playlistId") long playlistId,@PathVariable ("userId") long userId,@RequestParam ("songId") long songId){
         playlistService.AddSongToPlaylist(playlistId,songId);
     }
 
-    @DeleteMapping("/users/{userId}/playlists/{playlistId}/removeSong/{songId}")
-    public void removeSongFromPlaylist(@PathVariable ("playlistId") long playlistId,@PathVariable ("userId") long userId,@PathVariable ("songId") long songId){
+    @DeleteMapping("/users/{userId}/playlists/{playlistId}/removeSong")
+    public void removeSongFromPlaylist(@PathVariable ("playlistId") long playlistId,@PathVariable ("userId") long userId,@RequestParam ("songId") long songId){
         playlistService.AddSongToPlaylist(playlistId,songId);
     }
 

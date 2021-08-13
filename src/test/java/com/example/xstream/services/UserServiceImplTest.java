@@ -65,7 +65,7 @@ class UserServiceImplTest {
         userRepository.save(user);
 
 
-        assertNotNull(userRepository.findById(1L).get());
+        assertNotNull(userRepository.findUserByEmail(user.getEmail()));
 
 
 

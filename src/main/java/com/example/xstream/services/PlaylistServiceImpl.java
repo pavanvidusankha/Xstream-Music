@@ -4,6 +4,7 @@ import com.example.xstream.models.Playlist;
 import com.example.xstream.models.Song;
 import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
+import com.example.xstream.repositories.SongRepository;
 import com.example.xstream.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,12 @@ public class PlaylistServiceImpl implements PlaylistService{
 
     PlaylistRepository playlistRepository;
     UserRepository userRepository;
-    SongService songService;
+    SongRepository songRepository;
     @Autowired
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository,UserRepository userRepository){
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository,UserRepository userRepository,SongRepository songRepository){
         this.playlistRepository=playlistRepository;
         this.userRepository=userRepository;
+        this.songRepository=songRepository;
     }
     @Override
     public void addNewPlaylist(Playlist playlist, long userId) {
@@ -76,16 +78,16 @@ public class PlaylistServiceImpl implements PlaylistService{
     @Override
     public void AddSongToPlaylist(long playlistId, long songId) {
        Playlist playlist=getPlaylist(playlistId);
-       Song song=songService.getSong(songId);
+       Song song=songRepository.findById(songId).orElseThrow(()-> new IllegalStateException( "Song with id "+songId+"not exists"));
        playlist.getPlaylistSongs().add(song);
-      // playlistRepository.save(playlist);
+       playlistRepository.save(playlist);
     }
 
     @Override
     public void RemoveSongFromPlaylist(long playlistId, long songId) {
         Playlist playlist=getPlaylist(playlistId);
-        Song song=songService.getSong(songId);
+        Song song=songRepository.findById(songId).orElseThrow(()-> new IllegalStateException( "Song with id "+songId+"not exists"));
         playlist.getPlaylistSongs().remove(song);
-       // playlistRepository.save(playlist);
+       playlistRepository.save(playlist);
     }
 }

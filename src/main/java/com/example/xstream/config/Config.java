@@ -2,6 +2,7 @@ package com.example.xstream.config;
 
 import com.example.xstream.models.*;
 import com.example.xstream.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,9 @@ import java.util.Locale;
 @Configuration
 public class Config {
 
+
     @Bean
+    @Autowired
     CommandLineRunner commandLineRunner(UserRepository userRepository, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return args -> {
