@@ -3,6 +3,7 @@ package com.example.xstream.services;
 import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
 import com.example.xstream.repositories.UserRepository;
+import com.example.xstream.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

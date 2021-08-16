@@ -6,6 +6,7 @@ import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
 import com.example.xstream.repositories.SongRepository;
 import com.example.xstream.repositories.UserRepository;
+import com.example.xstream.services.interfaces.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
 @Service
 @Transactional
 
-public class PlaylistServiceImpl implements PlaylistService{
+public class PlaylistServiceImpl implements PlaylistService {
 
 
     PlaylistRepository playlistRepository;

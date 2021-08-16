@@ -2,6 +2,7 @@ package com.example.xstream.services;
 
 import com.example.xstream.models.Artist;
 import com.example.xstream.repositories.ArtistRepository;
+import com.example.xstream.services.interfaces.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.example.xstream.services;
+package com.example.xstream.services.interfaces;
 
 import com.example.xstream.models.Playlist;
 import java.util.List;

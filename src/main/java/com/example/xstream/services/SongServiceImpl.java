@@ -5,6 +5,7 @@ import com.example.xstream.models.Song;
 import com.example.xstream.repositories.AlbumRepository;
 import com.example.xstream.repositories.ArtistRepository;
 import com.example.xstream.repositories.SongRepository;
+import com.example.xstream.services.interfaces.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class SongServiceImpl implements SongService{
+public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
     @Autowired
