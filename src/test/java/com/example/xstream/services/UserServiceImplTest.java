@@ -7,8 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -19,10 +21,16 @@ import static org.mockito.Mockito.verify;
 class UserServiceImplTest {
 
     //    AutoCloseable autoClosable;
-    UserServiceImpl userService;
+
     @Mock
     private UserRepository userRepository;
     private PlaylistRepository playlistRepository;
+
+    @Autowired
+    @InjectMocks
+    UserServiceImpl userService;
+    private User user1;
+    private User user2;
 
     @BeforeEach
     void setUp() {
@@ -61,7 +69,7 @@ class UserServiceImplTest {
 //        assertThat(captoredValue).isEqualTo(testUser);
 
         //new Test
-        User user = new User("test1", "john", "doe", "jdoe@gmail.com");
+        User user = new User("test1", "john", "doe", "jdoe1@gmail.com");
         userRepository.save(user);
 
 
@@ -82,12 +90,12 @@ class UserServiceImplTest {
     @Test
     void updateUser() {
 
-        //User test = userRepository.findById(1L).orElseThrow(() -> new IllegalStateException("No User exists"));
-        User test1 = userRepository.findUserByEmail("jdoe@gmail.com").orElseThrow(() -> new IllegalStateException("No User exists"));
+        User test1 = userRepository.findById(1L).orElseThrow(() -> new IllegalStateException("No User exists"));
+        //User test1 = userRepository.findUserByEmail("jdoe1@gmail.com").orElseThrow(() -> new IllegalStateException("No User exists"));
         test1.setEmail("test1@xtream.com");
         userRepository.save(test1);
 
-        assertNotEquals("jdoe@gmail.com", userRepository.findUserByEmail("jdoe@gmail.com").get().getEmail());
+        assertNotEquals("jdoe@gmail.com", userRepository.findUserByEmail("jdoe1@gmail.com").get().getEmail());
 
     }
 }
