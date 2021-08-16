@@ -50,7 +50,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Song'
+                $ref: '#/components/schemas/ArtistsList'
         '400':
           description: 'Invalid input, object invalid'
           content:
@@ -414,7 +414,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Song'
+                $ref: '#/components/schemas/SongsList'
         '400':
           description: 'Invalid input, object invalid'
           content:
@@ -493,7 +493,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Artist'
+                $ref: '#/components/schemas/Song'
         '400':
           description: 'Invalid input, object invalid'
           headers:
@@ -983,7 +983,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Album'
+                $ref: '#/components/schemas/AlbumsList'
         '400':
           description: 'Invalid input, object invalid'
           content:
@@ -1277,6 +1277,74 @@ paths:
         "404":
           description: album not found
   /users:
+    get:
+      tags:
+        - users
+      summary: get users info
+      description: get the all users info
+      operationId: getUsers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersList'
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: users info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     post:
       tags:
         - users
@@ -1554,7 +1622,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Playlist'
+                $ref: '#/components/schemas/Playlists'
         '400':
           description: 'Invalid input, object invalid'
           content:
@@ -2060,3 +2128,60 @@ components:
           example: d290f1ee-6c54-4b01-90e6-d73232f04342
       xml:
         name: Playlist
+    Playlists:
+      type: object
+      required:
+        - playlists
+      properties:
+        playlists:
+          type: array
+          items:
+            $ref: '#/components/schemas/Playlist'
+      xml:
+        name: Plalists
+    SongsList:
+      type: object
+      required:
+        - songs
+      properties:
+        songs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Song'
+      xml:
+        name: SongsList
+    UsersList:
+      type: object
+      required:
+        - users
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      xml:
+        name: UsersList
+    AlbumsList:
+      type: object
+      required:
+        - albums
+      properties:
+        albums:
+          type: array
+          items:
+            $ref: '#/components/schemas/Album'
+      xml:
+        name: AlbumsList
+    ArtistsList:
+      type: object
+      required:
+        - artists
+      properties:
+        artists:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artist'
+      xml:
+        name: ArtistsList
+
+
