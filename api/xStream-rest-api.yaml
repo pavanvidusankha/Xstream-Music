@@ -12,52 +12,103 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: "1"
 servers:
-- url: https://virtserver.swaggerhub.com/pavanvidusankha/xStream/1
-  description: SwaggerHub API Auto Mocking
+  - url: https://virtserver.swaggerhub.com/pavanvidusankha/xStream/1
+    description: SwaggerHub API Auto Mocking
 tags:
-- name: songs
-  description: find all info on stored songs
-- name: artists
-  description: find all the  artists on the music library
-- name: users
-  description: operations about users
-- name: albums
-  description: get access to the musical albums on the library
-- name: playlists
-  description: operations about user created playlists
+  - name: songs
+    description: find all info on stored songs
+  - name: artists
+    description: find all the  artists on the music library
+  - name: users
+    description: operations about users
+  - name: albums
+    description: get access to the musical albums on the library
+  - name: playlists
+    description: operations about user created playlists
 paths:
   /artists:
     get:
       tags:
-      - artists
+        - artists
       summary: get artists info
       description: get the all artists info
       operationId: getArtists
       parameters:
-      - name: genre
-        in: query
-        description: search by genre 
-        schema:
-          type: string 
-      - name: name
-        in: query
-        description: search by name 
-        schema:
-          type: string     
+        - name: genre
+          in: query
+          description: search by genre
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: search by name
+          schema:
+            type: string
       responses:
-        "200":
-          description: search results matching criteria
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Artist'
-        "400":
-          description: bad input parameter
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: artists info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     post:
       tags:
-      - artists
+        - artists
       summary: Add new artists to the library
       description: Add new artists
       operationId: addArtist
@@ -68,66 +119,182 @@ paths:
             schema:
               $ref: '#/components/schemas/Artist'
       responses:
-        "201":
+        '200':
           description: artist created
-        "400":
-          description: invalid input, object invalid
-        "409":
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
           description: an existing artist already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
+
   /artists/{artistId}:
     get:
       tags:
-      - artists
+        - artists
       summary: Get artist by ID
       operationId: getArtistById
       parameters:
-      - name: artistId
-        in: path
-        description: The name that needs to be fetched.  .
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: artistId
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Artist'
-            application/xml:
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
               schema:
-                $ref: '#/components/schemas/Artist'
-        "400":
-          description: Invalid artist supplied
-        "404":
-          description: artist not found
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: artists info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     put:
       tags:
-      - artists
+        - artists
       summary: Update artist by ID
       description: update the artist.
       operationId: updateArtist
       parameters:
-      - name: artistId
-        in: path
-        description: name that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-      - name: genre
-        in: query
-        description: genre that need to be updated
-        schema:
-          type: string  
-      - name: country
-        in: query
-        description: country that need to be updated
-        schema:
-          type: string         
+        - name: artistId
+          in: path
+          description: name that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: genre
+          in: query
+          description: genre that need to be updated
+          schema:
+            type: string
+        - name: country
+          in: query
+          description: country that need to be updated
+          schema:
+            type: string
       requestBody:
         description: Updated artist object
         content:
@@ -137,24 +304,24 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid artist supplied
+          description: Invalid artist provided
         "404":
           description: artist not found
     patch:
       tags:
-      - artists
+        - artists
       summary: Update artist by ID
       description: update the artist.
-      operationId: updateArtist
+      operationId: updateArtistById
       parameters:
-      - name: artistId
-        in: path
-        description: name that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: artistId
+          in: path
+          description: name that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated artist object
         content:
@@ -164,99 +331,148 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid artist supplied
+          description: Invalid artist provided
         "404":
           description: artist not found
     delete:
       tags:
-      - artists
+        - artists
       summary: Delete artist
       operationId: deleteArtist
       parameters:
-      - name: artistId
-        in: path
-        description: The artist name that needs to be deleted
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: artistId
+          in: path
+          description: The artist name that needs to be deleted
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
         "400":
-          description: Invalid artist supplied
+          description: Invalid artist provided
         "404":
           description: artist not found
   /songs:
     get:
       tags:
-      - songs
+        - songs
       summary: get all songs
       description: |
         get the songs from the library
       operationId: getSong
       parameters:
-      - name: searchString
-        in: query
-        description: pass an optional search string for looking up inventory
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: skip
-        in: query
-        description: number of records to skip for pagination
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-      - name: genre
-        in: query
-        description: search by genre
-        required: false
-        style: form
-        explode: true
-        schema:
-          maximum: 50
-          minimum: 0
-          type: string
-      - name: album
-        in: query
-        description: search by album
-        required: false
-        style: form
-        explode: true
-        schema:
-          maximum: 50
-          minimum: 0
-          type: string
-      - name: year
-        in: query
-        description: search by year
-        required: false
-        style: form
-        explode: true
-        schema:
-          maximum: 50
-          minimum: 0
-          type: string
+        - name: searchString
+          in: query
+          description: pass an optional search string for looking up inventory
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: number of records to skip for pagination
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: genre
+          in: query
+          description: search by genre
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: album
+          in: query
+          description: search by album
+          required: false
+          style: form
+          explode: true
+          schema:
+            maximum: 50
+            minimum: 0
+            type: string
+        - name: year
+          in: query
+          description: search by year
+          required: false
+          style: form
+          explode: true
+          schema:
+            maximum: 2021
+            minimum: 1900
+            type: string
       responses:
-        "200":
-          description: search results matching criteria
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Song'
-        "400":
-          description: bad input parameter
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: songs info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     post:
       tags:
-      - songs
+        - songs
       summary: Add new songs to the library
       description: Add new songs
       operationId: addSong
@@ -267,71 +483,186 @@ paths:
             schema:
               $ref: '#/components/schemas/Song'
       responses:
-        "201":
-          description: item created
-        "400":
-          description: invalid input, object invalid
-        "409":
-          description: an existing song already exists
+        '200':
+          description: artist created
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
+          description: an existing artist already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
   /songs/{id}:
     get:
       tags:
-      - songs
+        - songs
       summary: Get song by ID
       operationId: getSongById
       parameters:
-      - name: id
-        in: path
-        description: The id of the song that needs to be fetched.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: The id of the song that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Song'
-            application/xml:
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
               schema:
-                $ref: '#/components/schemas/Song'
-        "400":
-          description: Invalid song supplied
-        "404":
-          description: song not found
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: song info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     put:
       tags:
-      - songs
+        - songs
       summary: Update song by ID
       description: update the song.
       operationId: updateSong
       parameters:
-      - name: id
-        in: path
-        description: song ID that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-      - name: name
-        in: query
-        description: name that need to be updated
-        schema:
-          type: string  
-      - name: duration
-        in: query
-        description: song duration that need to be updated
-        schema:
-          type: integer  
-      - name: genre
-        in: query
-        description: song genre that need to be updated
-        schema:
-          type: string                
+        - name: id
+          in: path
+          description: song ID that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name that need to be updated
+          schema:
+            type: string
+        - name: duration
+          in: query
+          description: song duration that need to be updated
+          schema:
+            type: integer
+        - name: genre
+          in: query
+          description: song genre that need to be updated
+          schema:
+            type: string
       requestBody:
         description: Updated song object
         content:
@@ -341,39 +672,39 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid song supplied
+          description: Invalid song provided
         "404":
           description: song not found
     patch:
       tags:
-      - songs
+        - songs
       summary: Update song by ID
       description: update the song.
-      operationId: updateSong
+      operationId: updateSongById
       parameters:
-      - name: id
-        in: path
-        description: song ID that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-      - name: name
-        in: query
-        description: name that need to be updated
-        schema:
-          type: string  
-      - name: duration
-        in: query
-        description: song duration that need to be updated
-        schema:
-          type: integer  
-      - name: genre
-        in: query
-        description: song genre that need to be updated
-        schema:
-          type: string       
+        - name: id
+          in: path
+          description: song ID that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name that need to be updated
+          schema:
+            type: string
+        - name: duration
+          in: query
+          description: song duration that need to be updated
+          schema:
+            type: integer
+        - name: genre
+          in: query
+          description: song genre that need to be updated
+          schema:
+            type: string
       requestBody:
         description: Updated song object
         content:
@@ -383,114 +714,334 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid song supplied
+          description: Invalid song provided
         "404":
-          description: song not found      
+          description: song not found
     delete:
       tags:
-      - songs
+        - songs
       summary: Delete song by ID
       operationId: deleteSong
       parameters:
-      - name: id
-        in: path
-        description: The song name that needs to be deleted
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: The song name that needs to be deleted
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
         "400":
-          description: Invalid song supplied
+          description: Invalid song provided
         "404":
           description: song not found
   /artists/{artistId}/albums/{albumId}/songs/{songsId}:
     get:
       tags:
-      - songs
-      summary: Get artist by ID
-      operationId: getArtistById
+        - songs
+      summary: Get song by ID
+      operationId: getSongByIds
       parameters:
-      - name: artistId
-        in: path
-        description: The name that needs to be fetched.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: artistId
+          in: path
+          description: The song ID that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: albumId
+          in: path
+          description: The album ID that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: songsId
+          in: path
+          description: The song ID that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Artist'
-            application/xml:
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
               schema:
-                $ref: '#/components/schemas/Artist'
-        "400":
-          description: Invalid artist supplied
-        "404":
-          description: artist not found        
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: song info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
+    post:
+      tags:
+        - songs
+      summary: Add song to a album
+      operationId: addSongById
+      parameters:
+        - name: artistId
+          in: path
+          description: The id that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: albumId
+          in: path
+          description: The album ID that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: songsId
+          in: path
+          description: The song ID that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: song created
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
+          description: an existing artist already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
+
   /albums:
     get:
       tags:
-      - albums
+        - albums
       summary: get album info
       description: |
         get the albums from the library
       operationId: getAlbum
       parameters:
-      - name: artistId
-        in: query
-        description: search by artist Id
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: genre
-        in: query
-        description: search by genre
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: skip
-        in: query
-        description: number of records to skip for pagination
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
-      - name: year
-        in: query
-        description: search by year
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
+        - name: artistId
+          in: query
+          description: search by artist Id
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: genre
+          in: query
+          description: search by genre
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: number of records to skip for pagination
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: year
+          in: query
+          description: search by year
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
       responses:
-        "200":
-          description: search results matching criteria
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Album'
-        "400":
-          description: bad input parameter
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: artists info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     post:
       tags:
-      - albums
+        - albums
       summary: Add new albums to the library
       description: Add new album
       operationId: addAlbum
@@ -501,56 +1052,172 @@ paths:
             schema:
               $ref: '#/components/schemas/Album'
       responses:
-        "201":
-          description: item created
-        "400":
-          description: invalid input, object invalid
-        "409":
+        '200':
+          description: artist created
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
           description: an existing album already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
+
   /albums/{albumId}:
     get:
       tags:
-      - albums
+        - albums
       summary: Get album by ID
       operationId: getAlbumById
       parameters:
-      - name: albumId
-        in: path
-        description: The name that needs to be fetched. 
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: albumId
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Album'
-            application/xml:
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
               schema:
-                $ref: '#/components/schemas/Album'
-        "400":
-          description: Invalid album supplied
-        "404":
-          description: album not found
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: album info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     put:
       tags:
-      - albums
+        - albums
       summary: Update album
       description: update the album.
       operationId: updateAlbum
       parameters:
-      - name: albumId
-        in: path
-        description: name that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: albumId
+          in: path
+          description: name that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated song object
         content:
@@ -560,24 +1227,24 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid album supplied
+          description: Invalid album provided
         "404":
           description: album not found
     patch:
       tags:
-      - albums
+        - albums
       summary: Update album
       description: update the album.
-      operationId: updateAlbum
+      operationId: updateAlbumById
       parameters:
-      - name: albumId
-        in: path
-        description: name that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: albumId
+          in: path
+          description: name that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated song object
         content:
@@ -587,32 +1254,32 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid album supplied
+          description: Invalid album provided
         "404":
-          description: album not found      
+          description: album not found
     delete:
       tags:
-      - albums
+        - albums
       summary: Delete album
       operationId: deleteAlbum
       parameters:
-      - name: albumId
-        in: path
-        description: The album name that needs to be deleted
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: albumId
+          in: path
+          description: The album name that needs to be deleted
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
         "400":
-          description: Invalid album supplied
+          description: Invalid album provided
         "404":
           description: album not found
   /users:
     post:
       tags:
-      - users
+        - users
       summary: Create user
       description: This can only be done by the logged in user.
       operationId: createUser
@@ -624,57 +1291,177 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       responses:
+        '200':
+          description: user created
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
+          description: an existing user already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
         default:
-          description: successful operation
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
+
   /users/{userId}:
     get:
       tags:
-      - users
+        - users
       summary: Get user by user ID
       operationId: getUserById
       parameters:
-      - name: userId
-        in: path
-        description: The name that needs to be fetched.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-      - name: name
-        in: query
-        description: name that need to be updated
-        schema:
-          type: string      
+        - name: userId
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: name that need to be updated
+          schema:
+            type: string
       responses:
-        "200":
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-            application/xml:
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
               schema:
-                $ref: '#/components/schemas/User'
-        "400":
-          description: Invalid username supplied
-        "404":
-          description: User not found
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: users info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     put:
       tags:
-      - users
+        - users
       summary: Update user
       description: This can only be done by the logged in user.
       operationId: updateUser
       parameters:
-      - name: userId
-        in: path
-        description: user that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: userId
+          in: path
+          description: user that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated user object
         content:
@@ -684,24 +1471,24 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid user supplied
+          description: Invalid user provided
         "404":
           description: User not found
     patch:
       tags:
-      - users
+        - users
       summary: Update user
       description: This can only be done by the logged in user.
-      operationId: updateUser
+      operationId: updateUserById
       parameters:
-      - name: userId
-        in: path
-        description: user that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: userId
+          in: path
+          description: user that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated user object
         content:
@@ -711,70 +1498,121 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid user supplied
+          description: Invalid user provided
         "404":
-          description: User not found      
+          description: User not found
     delete:
       tags:
-      - users
+        - users
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser
       parameters:
-      - name: userId
-        in: path
-        description: user that needs to be deleted
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: userId
+          in: path
+          description: user that needs to be deleted
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
         "400":
-          description: Invalid userId supplied
+          description: Invalid userId provided
         "404":
           description: User not found
   /playlists:
     get:
       tags:
-      - playlists
+        - playlists
       summary: get all playlists
       description: |
         get the playlists from the library
       operationId: getPlaylist
       parameters:
-      - name: username
-        in: query
-        description: search by uname
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: skip
-        in: query
-        description: number of records to skip for pagination
-        required: false
-        style: form
-        explode: true
-        schema:
-          minimum: 0
-          type: integer
-          format: int32
+        - name: username
+          in: query
+          description: search by uname
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: skip
+          in: query
+          description: number of records to skip for pagination
+          required: false
+          style: form
+          explode: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
       responses:
-        "200":
-          description: search results matching criteria
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Playlist'
-        "400":
-          description: bad input parameter
+                $ref: '#/components/schemas/Playlist'
+        '400':
+          description: 'Invalid input, object invalid'
+          content:
+            application/json:
+              example:
+                code: invalid.parameters
+                message: Provided parameters are invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found
+                message: playlist info not found
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
     post:
       tags:
-      - playlists
+        - playlists
       summary: Add new playlist to the library
       description: Add new playlist
       operationId: addPlaylist
@@ -785,27 +1623,95 @@ paths:
             schema:
               $ref: '#/components/schemas/Playlist'
       responses:
-        "201":
-          description: item created
-        "400":
-          description: invalid input, object invalid
-        "409":
+        '200':
+          description: playlist created
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
           description: an existing playlist already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
+
   /playlists/{id}:
     get:
       tags:
-      - playlists
+        - playlists
       summary: Get playlist by id
       operationId: getPlaylistById
       parameters:
-      - name: id
-        in: path
-        description: The name that needs to be fetched.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
         "200":
           description: successful operation
@@ -817,24 +1723,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/Playlist'
         "400":
-          description: Invalid playlist supplied
+          description: Invalid playlist provided
         "404":
           description: playlist not found
     put:
       tags:
-      - playlists
+        - playlists
       summary: Update playlist
       description: update the playlist.
       operationId: updatePlaylist
       parameters:
-      - name: id
-        in: path
-        description: id that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: id that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated playlist object
         content:
@@ -844,24 +1750,24 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid playlist supplied
+          description: Invalid playlist provided
         "404":
           description: playlist not found
     patch:
       tags:
-      - playlists
+        - playlists
       summary: Update playlist
       description: update the playlist.
-      operationId: updatePlaylist
+      operationId: updatePlaylistById
       parameters:
-      - name: id
-        in: path
-        description: id that need to be updated
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: id that need to be updated
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       requestBody:
         description: Updated playlist object
         content:
@@ -871,77 +1777,175 @@ paths:
         required: true
       responses:
         "400":
-          description: Invalid playlist supplied
+          description: Invalid playlist provided
         "404":
-          description: playlist not found      
+          description: playlist not found
     delete:
       tags:
-      - playlists
+        - playlists
       summary: Delete playlist
       operationId: deletePlaylist
       parameters:
-      - name: id
-        in: path
-        description: The playlist id that needs to be deleted
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
+        - name: id
+          in: path
+          description: The playlist id that needs to be deleted
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
       responses:
         "400":
-          description: Invalid playlist supplied
+          description: Invalid playlist provided
         "404":
           description: playlist not found
-  /users/{userId}/playlists/{playlistId}/removeSong/{songId} :
+  /users/{userId}/playlists/{playlistId} :
     delete:
       tags:
-      - playlists
+        - playlists
       summary: Delete songs from playlist
       operationId: deleteSongFromPlaylist
       parameters:
-      - name: playlistId
-        in: path
-        description: The playlist id 
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-      - name: userId
-        in: path
-        description: The user id 
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer    
-      - name: songId
-        in: path
-        description: The song id that needs to be deleted
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer        
+        - name: playlistId
+          in: path
+          description: The playlist id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: The user id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: songId
+          in: query
+          description: The song id that needs to be deleted
+          explode: false
+          schema:
+            type: integer
       responses:
         "400":
-          description: Invalid playlist supplied
+          description: Invalid playlist provided
         "404":
           description: playlist not found
-
-
+    post:
+      tags:
+        - playlists
+      summary: Add songs to a playlist
+      operationId: AddSongFromPlaylist
+      parameters:
+        - name: playlistId
+          in: path
+          description: The playlist id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: The user id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+        - name: songId
+          in: query
+          description: The song id that needs to be deleted
+          explode: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: song added
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        '400':
+          description: 'Invalid input, object invalid'
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: invalid details
+                message: Provided info is invalid
+        '404':
+          description: Resource not found
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: resource.not.found.
+                message: resource not found
+        '409':
+          description: an existing song already exists
+        '500':
+          description: Internal Server Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: internal.server.error
+                message: Internal Server Error
+        '503':
+          description: Service Unavailable
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: external.service.failure
+                message: External service failure
+        default:
+          description: Unexpected Error
+          headers:
+            Syy-Operation-Id:
+              schema:
+                type: string
+              description: Returns operationId
+          content:
+            application/json:
+              example:
+                code: unexpected.error
+                message: Unexpected Error
 components:
   schemas:
     Song:
       required:
-      - album
-      - artist
-      - duration
-      - genre
-      - id
-      - name
-      - releaseDate
+        - album_id
+        - artist_id
+        - duration
+        - genre
+        - id
+        - name
+        - release_date
       type: object
       properties:
         id:
@@ -951,26 +1955,34 @@ components:
         name:
           type: string
           example: Can't Feel My Face
-        releaseDate:
+        release_date:
           type: string
           format: date-time
-          example: 2016-08-29T09:12:33.001Z
-        artist:
-          $ref: '#/components/schemas/Artist'
-        album:
-          $ref: '#/components/schemas/Album'
+          example: '2016-08-29T09:12:33.001Z'
+        artist_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d702323148f0
+        album_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d70321748f08
         genre:
           type: array
           items:
             type: string
     Artist:
       required:
-      - country
-      - genre
-      - name
-      - songs
+        - country
+        - genre
+        - name
+        - id
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701742f0857
         name:
           type: string
           example: The Weeknd
@@ -982,71 +1994,69 @@ components:
         country:
           type: string
           example: Canada
-        songs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Song'
     Album:
       required:
-      - artist
-      - genre
-      - name
-      - releasedDate
-      - songs
+        - id
+        - artist_id
+        - genre
+        - name
+        - released_date
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d7017fd98f05
         name:
           type: string
           example: Beauty Behind The Madness
         genre:
           type: string
           example: Pop
-        artist:
-          $ref: '#/components/schemas/Artist'
-        songs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Song'
-        releasedDate:
+        artist_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d324247fd98f05
+        released_date:
           type: string
           format: date-time
-          example: 2016-08-29T09:12:33.001Z
+          example: '2016-08-29T09:12:33.001Z'
       xml:
         name: Album
     User:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
+          example: d2321321ee-6c54-4b01-90e6-d7017fd98f05
         username:
           type: string
+          example: psam
         firstName:
           type: string
+          example: pavan
         lastName:
           type: string
+          example: samaranayake
         email:
           type: string
+          example: psam@xstream.com
       xml:
         name: User
     Playlist:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
+          example: d292431ee-6c54-4b01-90e6-d7032fd98f05
         name:
           type: string
-        user:
-          $ref: '#/components/schemas/User'
-        songs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Song'
-        public:
-          type: boolean
+          example: "My Favourites"
+        user_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d73232f04342
       xml:
         name: Playlist
