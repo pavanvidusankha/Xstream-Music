@@ -484,7 +484,7 @@ paths:
               $ref: '#/components/schemas/Song'
       responses:
         '200':
-          description: artist created
+          description: song created
           headers:
             Syy-Operation-Id:
               schema:
@@ -1053,7 +1053,7 @@ paths:
               $ref: '#/components/schemas/Album'
       responses:
         '200':
-          description: artist created
+          description: album created
           headers:
             Syy-Operation-Id:
               schema:
@@ -1863,7 +1863,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: song added
+          description: playlist added
           headers:
             Syy-Operation-Id:
               schema:
