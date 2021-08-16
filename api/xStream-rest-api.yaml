@@ -409,8 +409,8 @@ paths:
     get:
       tags:
       - songs
-      summary: Get artist by ID
-      operationId: getArtistById
+      summary: Get song by ID
+      operationId: getSongByIds
       parameters:
       - name: artistId
         in: path
@@ -433,7 +433,35 @@ paths:
         "400":
           description: Invalid artist supplied
         "404":
-          description: artist not found        
+          description: artist not found 
+    post:
+      tags:
+      - songs
+      summary: Add song to a album
+      operationId: addSongById
+      parameters:
+      - name: artistId
+        in: path
+        description: The id that needs to be fetched.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        "400":
+          description: Invalid artist supplied
+        "404":
+          description: artist not found                     
   /albums:
     get:
       tags:
@@ -893,7 +921,7 @@ paths:
           description: Invalid playlist supplied
         "404":
           description: playlist not found
-  /users/{userId}/playlists/{playlistId}/removeSong/{songId} :
+  /users/{userId}/playlists/{playlistId} :
     delete:
       tags:
       - playlists
@@ -917,10 +945,8 @@ paths:
         schema:
           type: integer    
       - name: songId
-        in: path
+        in: query
         description: The song id that needs to be deleted
-        required: true
-        style: simple
         explode: false
         schema:
           type: integer        
@@ -929,6 +955,39 @@ paths:
           description: Invalid playlist supplied
         "404":
           description: playlist not found
+    post:
+      tags:
+      - playlists
+      summary: Add songs to a playlist
+      operationId: AddSongFromPlaylist
+      parameters:
+      - name: playlistId
+        in: path
+        description: The playlist id 
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: userId
+        in: path
+        description: The user id 
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer    
+      - name: songId
+        in: query
+        description: The song id that needs to be deleted
+        explode: false
+        schema:
+          type: integer        
+      responses:
+        "400":
+          description: Invalid playlist supplied
+        "404":
+          description: playlist not found          
 
 
 components:

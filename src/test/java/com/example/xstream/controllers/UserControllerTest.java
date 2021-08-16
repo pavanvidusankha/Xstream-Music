@@ -3,6 +3,7 @@ package com.example.xstream.controllers;
 import com.example.xstream.models.User;
 import com.example.xstream.services.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -86,10 +87,17 @@ class UserControllerTest {
     void updateUser() throws Exception {
 
         String patchInJson = "{\"lname\":\"Holder\"}";
+        JSONObject updateQuery = new JSONObject();
+        updateQuery.put("lname","Holder");
+        updateQuery.put("fname","Alex");
+        updateQuery.put("email","alex@gmail.com");
+
 //asJsonString(new User("alex1", "Alex", "Holder", "alex@gmail.com")
         mockMvc.perform( MockMvcRequestBuilders
                 .patch("/users/{id}", 2)
-                .content(patchInJson)
+                .queryParam("lname","Holder")
+                .queryParam("fname","Alex")
+                .queryParam("email","alex@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -103,9 +111,7 @@ class UserControllerTest {
 
 //        User updatedUser = User.builder().id(2).fname("Alex").lname("Holder").email("alex@gmail.com").build();
 
-        //mockito
-//        Mockito.when(use.findById(RECORD_1.getPatientId())).thenReturn(Optional.of(RECORD_1));
-//        Mockito.when(patientRecordRepository.save(updatedRecord)).thenReturn(updatedRecord);
+
 
         mockMvc.perform( MockMvcRequestBuilders
                 .put("/users/{id}", 2)
