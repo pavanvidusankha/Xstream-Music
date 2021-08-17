@@ -1,6 +1,7 @@
 package com.example.xstream.services;
 
 import com.example.xstream.exceptions.CustomException;
+import com.example.xstream.exceptions.EmptyListException;
 import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
 import com.example.xstream.repositories.UserRepository;
@@ -29,16 +30,18 @@ public class UserServiceImpl implements UserService {
 
 
     public List<User> getUsers() {
+        List<User> userList=null;
         try {
-            List<User> userList = userRepository.findAll();
-            if (userList.isEmpty()) {
-                throw new CustomException("005", "There is no user to return");
-            }
-            return userList;
-        } catch (Exception e) {
-            throw new CustomException("006", "There is some error while fetching the users");
-        }
+            userList = userRepository.findAll();
 
+        } catch (NoSuchElementException e) {
+            //throw new CustomException("006", "There is some error while fetching the users");
+            throw new NoSuchElementException(e.getMessage());
+        }
+if(userList.isEmpty()){
+    throw new EmptyListException("Users");
+}
+        return userList;
     }
 
     @Override
@@ -136,12 +139,6 @@ public class UserServiceImpl implements UserService {
     public User getUser(long id) {
         User user = new User();
         try {
-//            Optional<User> optionalUser = userRepository.findById(id);
-//            if (optionalUser.isPresent()) {
-//                user = optionalUser.get();
-//            } else
-//                user = null;
-
             user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such user exists in the DB"));
         } catch (IllegalArgumentException e) {
             throw new CustomException("007", "Id is empty,please send an id " + e.getMessage());

@@ -1,5 +1,6 @@
 package com.example.xstream.services;
 
+import com.example.xstream.exceptions.CustomException;
 import com.example.xstream.models.Artist;
 import com.example.xstream.repositories.ArtistRepository;
 import com.example.xstream.services.interfaces.ArtistService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -23,18 +25,35 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public void addNewArtist(Artist artist) {
-        artistRepository.save(artist);
+        if (artist.getName().isEmpty() || artist.getCountry().isEmpty() || artist.getGenre().isEmpty()) {
+            throw new CustomException("001", "Some fields are empty");
+        }
+      try{
+          artistRepository.save(artist);
+      } catch (IllegalStateException e) {
+          throw new CustomException("002", "Artist is null" + e.getMessage());
+
+      } catch (Exception e) {
+          throw new CustomException("015", "There is an error in the artist service" + e.getMessage());
+      }
     }
 
     @Override
     public void deleteArtist(long id) {
-        Boolean userExists = artistRepository.existsById(id);
+       try{
+           Boolean artistExists = artistRepository.existsById(id);
+           artistRepository.deleteById(id);
 
-        if (Boolean.FALSE.equals(userExists)) {
-            throw new IllegalStateException("user id " + id + "does not exists");
-        }
+//           if (Boolean.FALSE.equals(artistExists)) {
+//               throw new IllegalStateException("artist id " + id + "does not exists");
+//           }
+       }catch (NoSuchElementException e){
+           throw new CustomException("","artist id " + id + "does not exists");
+       }
 
-        artistRepository.deleteById(id);
+
+
+
     }
 
     @Override

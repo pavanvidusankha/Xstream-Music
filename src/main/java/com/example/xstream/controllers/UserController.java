@@ -39,8 +39,6 @@ public class UserController {
         if (user.equals(null)) {
             return new ResponseEntity<String>("Please enter a valid entity", HttpStatus.BAD_REQUEST);
         } else {
-
-
             userServiceImpl.addNewUser(user);
             return new ResponseEntity<>("User created", HttpStatus.CREATED);
         }
@@ -57,9 +55,9 @@ public class UserController {
     }
 
     @DeleteMapping(path = "{userId}")
-    public ResponseEntity<User> deleteUser(@PathVariable("userId") long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") long id) {
         userServiceImpl.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("User deleted",HttpStatus.ACCEPTED);
     }
 
     @PutMapping(path = "/{userId}")

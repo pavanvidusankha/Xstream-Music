@@ -18,7 +18,6 @@ import java.util.*;
 public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
-    @Autowired
     private AlbumRepository albumRepository;
     private ArtistRepository artistRepository;
 
