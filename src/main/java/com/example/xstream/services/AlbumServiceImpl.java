@@ -4,6 +4,7 @@ import com.example.xstream.models.Artist;
 import com.example.xstream.repositories.AlbumRepository;
 import com.example.xstream.repositories.ArtistRepository;
 import com.example.xstream.services.interfaces.AlbumService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,7 @@ public class AlbumServiceImpl implements AlbumService {
         if(releasedDate!=null && !Objects.equals(album.getReleasedDate(),releasedDate)){
             album.setReleasedDate(releasedDate);
         }
+
 
     }
 

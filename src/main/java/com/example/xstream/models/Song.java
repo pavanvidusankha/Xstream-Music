@@ -1,11 +1,19 @@
 package com.example.xstream.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "songs")
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(exclude="albums")
+@Setter
+@Getter
 public class Song {
 
     @Id
@@ -39,13 +47,15 @@ public class Song {
 //                    @JoinColumn(name = "album_id")
 //            }
 //    )
+    @JsonIgnore
     private Set<Album> albums =new HashSet<>();
     @ManyToOne
+    @JsonIgnore
     private Artist artist;
 
 
-    public Song() {
-    }
+//    public Song() {
+//    }
 
     public Song(String name, Integer duration, String genre) {
         this.name = name;
@@ -53,51 +63,51 @@ public class Song {
         this.genre = genre;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public Set<Album> getAlbums() {
-        return albums;
-    }
-
-    public void setAlbums(Set<Album> albums) {
-        this.albums = albums;
-    }
-
-    public Artist getArtist() {
-        return artist;
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-    }
+//    public long getId() {
+//        return id;
+//    }
+//
+//    public void setId(long id) {
+//        this.id = id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public Integer getDuration() {
+//        return duration;
+//    }
+//
+//    public void setDuration(Integer duration) {
+//        this.duration = duration;
+//    }
+//
+//    public String getGenre() {
+//        return genre;
+//    }
+//
+//    public void setGenre(String genre) {
+//        this.genre = genre;
+//    }
+//
+//    public Set<Album> getAlbums() {
+//        return albums;
+//    }
+//
+//    public void setAlbums(Set<Album> albums) {
+//        this.albums = albums;
+//    }
+//
+//    public Artist getArtist() {
+//        return artist;
+//    }
+//
+//    public void setArtist(Artist artist) {
+//        this.artist = artist;
+//    }
 }

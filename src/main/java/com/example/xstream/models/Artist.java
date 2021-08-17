@@ -1,11 +1,17 @@
 package com.example.xstream.models;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
+@Data
+@NoArgsConstructor
+@Setter
+@Getter
 @Table (name = "artists")
 public class Artist {
 
@@ -33,47 +39,11 @@ public class Artist {
     @JoinColumn(name = "artist_id")
     private Set<Song> songs= new HashSet<>();
 
-    public Artist() {
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
     public Artist(String name, String country, String genre) {
         this.name = name;
         this.country = country;
         this.genre = genre;
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     @Override
     public String toString() {
         return "Artist{" +

@@ -362,14 +362,6 @@ paths:
         get the songs from the library
       operationId: getSong
       parameters:
-        - name: searchString
-          in: query
-          description: pass an optional search string for looking up inventory
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
         - name: skip
           in: query
           description: number of records to skip for pagination

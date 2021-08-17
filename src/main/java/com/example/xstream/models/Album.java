@@ -1,11 +1,16 @@
 package com.example.xstream.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
+@Data
+@NoArgsConstructor
+@Setter
+@Getter
 @Entity
 @Table(name = "albums")
 public class Album {
@@ -29,8 +34,8 @@ public class Album {
     @Column( nullable = false)
     private Date releasedDate;
 
-    public Album() {
-    }
+//    public Album() {
+//    }
 
     public Album(String name, String genre, Date releasedDate) {
         this.name = name;
@@ -39,21 +44,21 @@ public class Album {
 
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public long getId() {
+//        return id;
+//    }
+//
+//    public void setId(long id) {
+//        this.id = id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     @Override
     public String toString() {
@@ -65,33 +70,34 @@ public class Album {
                 '}';
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public Date getReleasedDate() {
-        return releasedDate;
-    }
-
-    public void setReleasedDate(Date releasedDate) {
-        this.releasedDate = releasedDate;
-    }
-
-    public Artist getArtist() {
-        return artist;
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-    }
+//    public String getGenre() {
+//        return genre;
+//    }
+//
+//    public void setGenre(String genre) {
+//        this.genre = genre;
+//    }
+//
+//    public Date getReleasedDate() {
+//        return releasedDate;
+//    }
+//
+//    public void setReleasedDate(Date releasedDate) {
+//        this.releasedDate = releasedDate;
+//    }
+//
+//    public Artist getArtist() {
+//        return artist;
+//    }
+//
+//    public void setArtist(Artist artist) {
+//        this.artist = artist;
+//    }
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "artist_id",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Artist artist;
 //fetch=FetchType.LAZY
 //    @ManyToMany(
@@ -103,13 +109,14 @@ public class Album {
 //            joinColumns = { @JoinColumn(name = "song_id") },
 //            inverseJoinColumns = { @JoinColumn(name = "album_id") }) , cascade = { CascadeType.MERGE }
     @ManyToMany
+    @JsonIgnore
     private Set<Song> songs=new HashSet<>();
 
-    public Set<Song> getSongs() {
-        return songs;
-    }
-
-    public void setSongs(Set<Song> songs) {
-        this.songs = songs;
-    }
+//    public Set<Song> getSongs() {
+//        return songs;
+//    }
+//
+//    public void setSongs(Set<Song> songs) {
+//        this.songs = songs;
+//    }
 }

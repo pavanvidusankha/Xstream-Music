@@ -1,5 +1,6 @@
 package com.example.xstream.services;
 
+import com.example.xstream.exceptions.CustomException;
 import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
 import com.example.xstream.repositories.UserRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,65 +18,127 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private  UserRepository userRepository;
-    private PlaylistRepository playlistRepository;
+    private final UserRepository userRepository;
+    private final PlaylistRepository playlistRepository;
+
     @Autowired
-    public UserServiceImpl (UserRepository userRepository,PlaylistRepository playlistRepository){
-        this.userRepository=userRepository;
-        this.playlistRepository=playlistRepository;
+    public UserServiceImpl(UserRepository userRepository, PlaylistRepository playlistRepository) {
+        this.userRepository = userRepository;
+        this.playlistRepository = playlistRepository;
     }
 
 
-    public List<User> getUsers(){
-      return userRepository.findAll();
+    public List<User> getUsers() {
+        try {
+            List<User> userList = userRepository.findAll();
+            if (userList.isEmpty()) {
+                throw new CustomException("005", "There is no user to return");
+            }
+            return userList;
+        } catch (Exception e) {
+            throw new CustomException("006", "There is some error while fetching the users");
+        }
+
     }
 
     @Override
     public void addNewUser(User user) {
-        Optional<User> userOptional =userRepository.findUserByEmail(user.getEmail());
-        if(userOptional.isPresent()){
-            throw new IllegalStateException("Email already exists");
+
+        if (user.getUname().isEmpty() || user.getFname().isEmpty() || user.getEmail().isEmpty()) {
+            throw new CustomException("001", "Some fields are empty");
+        }
+        try {
+            Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
+            if (userOptional.isPresent()) {
+                throw new CustomException("004", "Email already exists");
+            }
+            userRepository.save(user);
+
+        } catch (IllegalStateException e) {
+            throw new CustomException("002", "User is null" + e.getMessage());
+
+        } catch (Exception e) {
+            throw new CustomException("003", "There is an error in the user service" + e.getMessage());
         }
 
-        userRepository.save(user);
+
     }
 
     public void deleteUser(long userId) {
-        Boolean userExists = userRepository.existsById(userId);
+        try {
+            Boolean userExists = userRepository.existsById(userId);
 
-        if(!userExists){
-            throw new IllegalStateException("user id "+userId+"does not exists");
+        } catch (IllegalArgumentException e) {
+            throw new CustomException("007", "Id is empty,please send an id " + e.getMessage());
+        } catch (NoSuchElementException e) {
+
+            throw new CustomException("008", "User with ID " + userId + " is not found " + e.getMessage());
+
+        } catch (IllegalStateException e) {
+            throw new CustomException("009", "There is an error deleting a user in the service layer " + e.getMessage());
+
         }
-        playlistRepository.deleteAllByUser(getUser(userId));
-        userRepository.deleteById(userId);
+
+        try {
+            playlistRepository.deleteAllByUser(getUser(userId));
+            userRepository.deleteById(userId);
+
+        } catch (Exception e) {
+            throw new CustomException("011", "There is an error deleting a user and playlists in the service layer " + e.getMessage());
+
+        }
+
+
     }
 
     @Override
     @Transactional
     public void updateUser(long id, String fname, String lname, String email) {
+        try {
+            User user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("user with id" + id + "not exists"));
 
-        User user= userRepository.findById(id).orElseThrow(()-> new IllegalStateException( "user with id"+id+"not exists"));
 
+            if (fname != null && fname.length() > 0 && !Objects.equals(user.getFname(), fname)) {
+                user.setFname(fname);
+            }
 
+            if (lname != null && lname.length() > 0 && !Objects.equals(user.getLname(), lname)) {
+                user.setLname(lname);
+            }
 
-        if(fname!=null && fname.length()>0 && !Objects.equals(user.getFname(),fname)){
-                 user.setFname(fname);
+            if (email != null && email.length() > 0 && !Objects.equals(user.getEmail(), email)) {
+                user.setEmail(email);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new CustomException("007", "Id is empty,please send an id " + e.getMessage());
+        } catch (Exception e) {
+            throw new CustomException("010", "There is an error updating a user in the service layer " + e.getMessage());
+
         }
-
-        if(lname!=null && lname.length()>0 && !Objects.equals(user.getLname(),lname)){
-            user.setLname(lname);
-        }
-
-        if(email!=null && email.length()>0 && !Objects.equals(user.getEmail(),email)){
-            user.setEmail(email);
-        }
-
 
 
     }
 
     @Override
     public User getUser(long id) {
-        return userRepository.findById(id).orElseThrow(()-> new IllegalStateException("User with ID "+ id +" is not found"));
+        User user = new User();
+        try {
+//            Optional<User> optionalUser = userRepository.findById(id);
+//            if (optionalUser.isPresent()) {
+//                user = optionalUser.get();
+//            } else
+//                user = null;
+
+            user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such user exists in the DB"));
+        } catch (IllegalArgumentException e) {
+            throw new CustomException("007", "Id is empty,please send an id " + e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new CustomException("008", "User with ID " + id + " is not found");
+        } catch (NullPointerException e) {
+            throw new CustomException("008", "User with ID " + id + " is not found " + e.getMessage());
+
+        }
+        return user;
+
     }
 }

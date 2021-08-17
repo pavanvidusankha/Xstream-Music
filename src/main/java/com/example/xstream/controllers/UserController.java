@@ -14,33 +14,37 @@ import java.util.List;
 public class UserController {
     private final UserServiceImpl userServiceImpl;
 
-    @Autowired
     public UserController(UserServiceImpl userServiceImpl) {
         this.userServiceImpl = userServiceImpl;
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public ResponseEntity<List<User>> getUsers() {
 
-        return userServiceImpl.getUsers();
+        List<User> usersList= userServiceImpl.getUsers();
+        return new ResponseEntity<>(usersList,HttpStatus.OK);
+
     }
 
     @GetMapping(path = "/{userId}")
-    public User getUser(@PathVariable("userId") long id) {
-        return userServiceImpl.getUser(id);
+    public ResponseEntity<User> getUser(@PathVariable("userId") long id) {
+
+        User user= userServiceImpl.getUser(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
+
     }
 
     @PostMapping
     public ResponseEntity<User> registerNewUser(@RequestBody User user) {
 
         userServiceImpl.addNewUser(user);
-        return new ResponseEntity<User>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{userId}")
     public ResponseEntity<User> deleteUser(@PathVariable("userId") long id) {
         userServiceImpl.deleteUser(id);
-        return new ResponseEntity<User>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping(path = "/{userId}")
@@ -48,7 +52,7 @@ public class UserController {
 
         userServiceImpl.updateUser(id, fname, lname, email);
         User updatedUser=userServiceImpl.getUser(id);
-        return new ResponseEntity<User>(updatedUser,HttpStatus.OK);
+        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
 
     }
 
@@ -56,6 +60,6 @@ public class UserController {
     public ResponseEntity<User> putUser(@PathVariable("userId") long id, @RequestParam(required = false) String fname, @RequestParam(required = false) String lname, @RequestParam(required = false) String email) {
         userServiceImpl.updateUser(id, fname, lname, email);
         User updatedUser=userServiceImpl.getUser(id);
-        return new ResponseEntity<User>(updatedUser,HttpStatus.OK);
+        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
     }
 }
