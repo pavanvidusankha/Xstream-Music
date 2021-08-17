@@ -55,7 +55,7 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
         headers.add("X-Validation-Failure", "Request validation failed !");
 
         //return handleExceptionInternal(ex, headers, status, request);
-        return new ResponseEntity<Object> ("Request body is not acceptable,Please check the ", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object> ("Request body is not acceptable,Please check  whether the requestBody is in valid format", HttpStatus.BAD_REQUEST);
 
     }
     @ExceptionHandler(Exception.class)
