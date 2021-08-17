@@ -42,6 +42,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void addAllUsers(List<User> usersList) {
+        if(usersList==null){
+            throw new CustomException("013","List is empty");
+        }
+        try{
+            userRepository.saveAll(usersList);
+        }catch (Exception e){
+            throw new CustomException("014","There is an error saving all users in the service layer "+e.getMessage());
+
+        }
+    }
+
+    @Override
     public void addNewUser(User user) {
 
         if (user.getUname().isEmpty() || user.getFname().isEmpty() || user.getEmail().isEmpty()) {

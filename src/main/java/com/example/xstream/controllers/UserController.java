@@ -21,24 +21,39 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getUsers() {
 
-        List<User> usersList= userServiceImpl.getUsers();
-        return new ResponseEntity<>(usersList,HttpStatus.OK);
+        List<User> usersList = userServiceImpl.getUsers();
+        return new ResponseEntity<>(usersList, HttpStatus.OK);
 
     }
 
     @GetMapping(path = "/{userId}")
     public ResponseEntity<User> getUser(@PathVariable("userId") long id) {
 
-        User user= userServiceImpl.getUser(id);
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        User user = userServiceImpl.getUser(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
 
     }
 
     @PostMapping
-    public ResponseEntity<User> registerNewUser(@RequestBody User user) {
+    public ResponseEntity<?> registerNewUser(@RequestBody User user) {
+        if (user.equals(null)) {
+            return new ResponseEntity<String>("Please enter a valid entity", HttpStatus.BAD_REQUEST);
+        } else {
 
-        userServiceImpl.addNewUser(user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+
+            userServiceImpl.addNewUser(user);
+            return new ResponseEntity<>("User created", HttpStatus.CREATED);
+        }
+    }
+
+    @PostMapping(path = "/bulk")
+    public ResponseEntity<?> addUsers(@RequestBody List<User> userList) {
+        if(userList != null && !userList.isEmpty()) {
+            userServiceImpl.addAllUsers(userList);
+            return new ResponseEntity<>("Users created", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Please check the request body", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(path = "{userId}")
@@ -51,15 +66,15 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable("userId") long id, @RequestParam(required = false) String fname, @RequestParam(required = false) String lname, @RequestParam(required = false) String email) {
 
         userServiceImpl.updateUser(id, fname, lname, email);
-        User updatedUser=userServiceImpl.getUser(id);
-        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
+        User updatedUser = userServiceImpl.getUser(id);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 
     }
 
     @PatchMapping(path = "/{userId}")
     public ResponseEntity<User> putUser(@PathVariable("userId") long id, @RequestParam(required = false) String fname, @RequestParam(required = false) String lname, @RequestParam(required = false) String email) {
         userServiceImpl.updateUser(id, fname, lname, email);
-        User updatedUser=userServiceImpl.getUser(id);
-        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
+        User updatedUser = userServiceImpl.getUser(id);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }
