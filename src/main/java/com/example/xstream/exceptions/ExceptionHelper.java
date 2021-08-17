@@ -32,14 +32,12 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-//        return super.handleHttpRequestMethodNotSupported(ex, headers, status, request);
         return new ResponseEntity<Object> ("Request body is not supported", HttpStatus.NOT_FOUND);
 
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        //return super.handleHttpMediaTypeNotAcceptable(ex, headers, status, request);
         return new ResponseEntity<Object> ("Request body is not acceptable", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 
     }
@@ -52,9 +50,8 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
         if (ex.getRootCause() instanceof InvalidFormatException) {
             InvalidFormatException jacksonDataBindInvalidFormatException = (InvalidFormatException) ex.getRootCause();
         }
-        headers.add("X-Validation-Failure", "Request validation failed !");
+//        headers.add("X-Validation-Failure", "Request validation failed !");
 
-        //return handleExceptionInternal(ex, headers, status, request);
         return new ResponseEntity<Object> ("Request body is not acceptable,Please check  whether the requestBody is in valid format", HttpStatus.BAD_REQUEST);
 
     }
@@ -64,7 +61,6 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
         if (ex instanceof NullPointerException) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        //return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         return new ResponseEntity<String> ("Request body is empty", HttpStatus.BAD_REQUEST);
 
     }
