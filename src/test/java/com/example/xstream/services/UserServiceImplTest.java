@@ -2,6 +2,7 @@ package com.example.xstream.services;
 
 import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
+import com.example.xstream.repositories.RoleRepository;
 import com.example.xstream.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -25,6 +27,8 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
     private PlaylistRepository playlistRepository;
+    private RoleRepository roleRepositpry;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     @InjectMocks
@@ -35,9 +39,9 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
 //        autoClosable = MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(userRepository, playlistRepository);
-        User user = new User("test1", "john", "doe", "jdoe@gmail.com");
-        userRepository.save(user);
+        userService = new UserServiceImpl(userRepository, playlistRepository,roleRepositpry,bCryptPasswordEncoder);
+        User testUser = new User("aholder","12","Alex","Holder","aholder@xstream.com");
+        userRepository.save(testUser);
     }
 
 //    @AfterEach
@@ -69,7 +73,7 @@ class UserServiceImplTest {
 //        assertThat(captoredValue).isEqualTo(testUser);
 
         //new Test
-        User user = new User("test1", "john", "doe", "jdoe1@gmail.com");
+        User user = new User("aholder","12","Alex","Holder","aholder@xstream.com");
         userRepository.save(user);
 
 

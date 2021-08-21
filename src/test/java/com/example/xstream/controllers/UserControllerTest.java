@@ -68,7 +68,7 @@ class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/users")
-                .content(asJsonString(new User("ahales", "alex", "holder", "aholder@gmail.com")))
+                .content(asJsonString(new User("aholder","12","Alex","Holder","aholder@xstream.com")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -115,7 +115,7 @@ class UserControllerTest {
 
         mockMvc.perform( MockMvcRequestBuilders
                 .put("/users/{id}", 2)
-                .content(asJsonString(new User(null,"Alex","Holder","alex@gmail.com")))
+                .content(asJsonString(new User("aholder","12","Alex","Holder","aholder@xstream.com")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

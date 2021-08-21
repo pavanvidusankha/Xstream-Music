@@ -22,7 +22,7 @@ class UserRepositoryTest {
 
     @Test
     void itShouldCheckUserByEmail() {
-        User testUser = new User("justin","justin","doe","jdoe@xstream.com");
+        User testUser = new User("aholder","12","Alex","Holder","aholder@xstream.com");
         long user_id=3;
         testUserRepository.save(testUser);
 
@@ -36,7 +36,7 @@ class UserRepositoryTest {
 
     @Test
     void itShouldCheckUserByEmailDoesntExists() {
-        User testUser = new User("justin","justin","doe","jdoe@xstream.com");
+        User testUser = new User("aholder","12","Alex","Holder","aholder@xstream.com");
         long user_id=3;
         testUserRepository.save(testUser);
 

@@ -2,14 +2,17 @@ package com.example.xstream.config;
 
 import com.example.xstream.models.*;
 import com.example.xstream.repositories.*;
+import com.example.xstream.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,18 +23,39 @@ public class Config {
 
     @Bean
     @Autowired
-    CommandLineRunner commandLineRunner(UserRepository userRepository, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository) throws ParseException {
+    CommandLineRunner commandLineRunner(UserRepository userRepository,UserService userService, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return args -> {
-            User pavan = new User("psam", "Pavan", "Samaranayake", "psam@xstream.com");
-            User test = new User("test", "John", "Doe", "jdoe@xstream.com");
+
+            //adding the roles
+            userService.saveRole(new Role(null,"ADMIN"));
+            userService.saveRole(new Role(null,"USER"));
+
+            //Adding the users
+            User pavan =new User("psam","1234","Pavan","Samaranayake","psam@xstream.com");
+            User john =new User("jdoe","123","John","Doe","jdoe@xstream.com");
+            User alex =new User("aholder","12","Alex","Holder","aholder@xstream.com");
+            userService.addNewUser(pavan);
+            userService.addNewUser(john);
+            userService.addNewUser(alex);
+
+
+            //adding roles to the users
+            userService.addRoleToUser("psam","ADMIN");
+            userService.addRoleToUser("psam","USER");
+            userService.addRoleToUser("jdoe","USER");
+
+//            User pavan = new User("psam", "Pavan", "Samaranayake", "psam@xstream.com");
+//            User test = new User("test", "John", "Doe", "jdoe@xstream.com");
+
+
             Artist artist = new Artist("The Weeknd", "Canada", "Pop/R&B");
             Artist artist1 = new Artist("Charlie Puth", "USA", "Pop/R&B");
             Artist artist2 = new Artist("Justin Timberlake", "USA", "Pop");
             Artist artist3 = new Artist("Pearl Jam", "USA", "Grunge Rock");
-            userRepository.saveAll(
-                    List.of(pavan, test)
-            );
+//            userRepository.saveAll(
+//                    List.of(pavan, test)
+//            );
             artistRepository.saveAll(List.of(artist, artist1, artist2, artist3));
 
             Album weekndAlbum = new Album("Beauty behind the madness", "Pop/R&B", dateFormat.parse("2014-01-21"));
@@ -81,7 +105,7 @@ public class Config {
             playlist1.getPlaylistSongs().add(song1);
 
             Playlist playlist2=new Playlist("ROCK");
-            playlist2.setUser(test);
+            playlist2.setUser(john);
            //test.getUserPlaylists().add(playlist2);
             playlist2.getPlaylistSongs().add(song3);
 
@@ -91,5 +115,9 @@ public class Config {
 
             //pavan.setEmail("pavan@xtream.com");
         };
+    }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

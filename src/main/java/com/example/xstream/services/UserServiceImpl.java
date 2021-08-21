@@ -1,36 +1,45 @@
 package com.example.xstream.services;
 
-import com.example.xstream.exceptions.CustomException;
-import com.example.xstream.exceptions.EmptyListException;
+import com.example.xstream.exceptions.*;
+import com.example.xstream.models.Role;
 import com.example.xstream.models.User;
 import com.example.xstream.repositories.PlaylistRepository;
+import com.example.xstream.repositories.RoleRepository;
 import com.example.xstream.repositories.UserRepository;
 import com.example.xstream.services.interfaces.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.security.InvalidParameterException;
+import java.util.*;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+@RequiredArgsConstructor
+@Slf4j
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PlaylistRepository playlistRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PlaylistRepository playlistRepository) {
-        this.userRepository = userRepository;
-        this.playlistRepository = playlistRepository;
-    }
+//    @Autowired
+//    public UserServiceImpl(UserRepository userRepository, PlaylistRepository playlistRepository) {
+//        this.userRepository = userRepository;
+//        this.playlistRepository = playlistRepository;
+//    }
 
 
     public List<User> getUsers() {
-        List<User> userList=null;
+        List<User> userList = null;
         try {
             userList = userRepository.findAll();
 
@@ -38,23 +47,49 @@ public class UserServiceImpl implements UserService {
             //throw new CustomException("006", "There is some error while fetching the users");
             throw new NoSuchElementException(e.getMessage());
         }
-if(userList.isEmpty()){
-    throw new EmptyListException("Users");
-}
+        if (userList.isEmpty()) {
+            throw new EmptyListException("Users");
+        }
         return userList;
     }
 
     @Override
     public void addAllUsers(List<User> usersList) {
-        if(usersList==null){
-            throw new CustomException("013","List is empty");
+        if (usersList == null) {
+            throw new CustomException("013", "List is empty");
         }
-        try{
+        try {
             userRepository.saveAll(usersList);
-        }catch (Exception e){
-            throw new CustomException("014","There is an error saving all users in the service layer "+e.getMessage());
+        } catch (Exception e) {
+            throw new CustomException("014", "There is an error saving all users in the service layer " + e.getMessage());
 
         }
+    }
+
+    @Override
+    public Role saveRole(Role role) {
+        try {
+            roleRepository.save(role);
+        } catch (IllegalStateException e) {
+            log.info("Error occurred when saving role");
+            throw new RoleServiceException();
+        }
+        log.info("Saving role " + role.getName());
+        return role;
+    }
+
+    @Override
+    public void addRoleToUser(String username, String roleName) {
+        try {
+            User user = userRepository.findUserByUname(username).orElseThrow();
+            Role role = roleRepository.findRoleByName(roleName);
+            user.getRoles().add(role);
+            log.info("adding Role"+role.getName()+"Saving user "+user.getFname());
+
+        } catch (Exception e) {
+            throw new UserServiceException();
+        }
+
     }
 
     @Override
@@ -69,13 +104,30 @@ if(userList.isEmpty()){
                 throw new CustomException("004", "Email already exists");
             }
             userRepository.save(user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 
         } catch (IllegalStateException e) {
+            log.error("Error occurred when saving user");
             throw new CustomException("002", "User is null" + e.getMessage());
 
         } catch (Exception e) {
             throw new CustomException("003", "There is an error in the user service" + e.getMessage());
         }
+
+        log.info("Saving user "+user.getUname());
+
+//            try {
+//                userRepository.save(user);
+//                //save encrypted password
+//                user.setPassword(passwordEncoder.encode(user.getPassword()));
+//            }catch (IllegalStateException e){
+//                log.info("Error occurred when saving user");
+//                throw new UserServiceException();
+//            }
+//            log.info("Saving user "+user.getName());
+//
+//            return user;
 
 
     }
@@ -139,7 +191,7 @@ if(userList.isEmpty()){
     public User getUser(long id) {
         User user = new User();
         try {
-            user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("No such user exists in the DB"));
+            user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No such user exists in the DB"));
         } catch (IllegalArgumentException e) {
             throw new CustomException("007", "Id is empty,please send an id " + e.getMessage());
         } catch (IllegalStateException e) {
@@ -150,5 +202,40 @@ if(userList.isEmpty()){
         }
         return user;
 
+    }
+
+    @Override
+    public User getUserbyUserName(String username) {
+        if(username.isEmpty()){
+            throw  new InvalidParameterException();
+        }
+        User user;
+        try{
+            user=userRepository.findUserByUname(username).orElseThrow();
+        }catch (IllegalStateException e) {
+            throw new UserServiceException();
+        }catch (NullPointerException e){
+            throw new NoItemFoundException();
+        }
+        log.info("retrieving the user"+user.getUname());
+
+        return user;    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user;
+        try{
+            user=userRepository.findUserByUname(username).orElseThrow();
+
+        }catch (UsernameNotFoundException e){
+            log.error("User with name "+username+"is not found");
+            throw new UsernameNotFoundException("User with name "+username+"is not found");
+        }catch (Exception e){
+            throw new UserServiceException();
+        }
+        Collection<SimpleGrantedAuthority> authorities=new ArrayList<>();
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        return new org.springframework.security.core.userdetails.User(user.getUname(),user.getPassword(),authorities);
     }
 }
