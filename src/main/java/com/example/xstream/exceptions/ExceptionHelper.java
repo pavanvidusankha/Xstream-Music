@@ -37,10 +37,10 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
         return new ResponseEntity<> ("No data in DB to return ", HttpStatus.NO_CONTENT);
     }
 
-//    @ExceptionHandler(CustomException.class)
-//    public ResponseEntity<String> handleBusinessLogicExceptions(CustomException e){
-//        return new ResponseEntity<> ("There is an issue with the  user service layer ", HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleBusinessLogicExceptions(CustomException e){
+        return new ResponseEntity<> ("There is an issue with the  user service layer ", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
