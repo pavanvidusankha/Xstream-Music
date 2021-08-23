@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.List;
 
 
-@RequestMapping
+@RequestMapping("/")
 @RestController
 public class SongController {
     private final SongServiceImpl songService;
