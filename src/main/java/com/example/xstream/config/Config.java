@@ -12,8 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,30 +21,27 @@ public class Config {
 
     @Bean
     @Autowired
-    CommandLineRunner commandLineRunner(UserRepository userRepository,UserService userService, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository) throws ParseException {
+    CommandLineRunner commandLineRunner(UserRepository userRepository, UserService userService, ArtistRepository artistRepository, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         return args -> {
 
             //adding the roles
-            userService.saveRole(new Role(null,"ADMIN"));
-            userService.saveRole(new Role(null,"USER"));
+            userService.saveRole(new Role(null, "ADMIN"));
+            userService.saveRole(new Role(null, "USER"));
 
             //Adding the users
-            User pavan =new User("psam","1234","Pavan","Samaranayake","psam@xstream.com");
-            User john =new User("jdoe","123","John","Doe","jdoe@xstream.com");
-            User alex =new User("aholder","12","Alex","Holder","aholder@xstream.com");
+            User pavan = new User("psam", "1234", "Pavan", "Samaranayake", "psam@xstream.com");
+            User john = new User("jdoe", "123", "John", "Doe", "jdoe@xstream.com");
+            User alex = new User("aholder", "12", "Alex", "Holder", "aholder@xstream.com");
             userService.addNewUser(pavan);
             userService.addNewUser(john);
             userService.addNewUser(alex);
 
 
             //adding roles to the users
-            userService.addRoleToUser("psam","ADMIN");
-            userService.addRoleToUser("psam","USER");
-            userService.addRoleToUser("jdoe","USER");
-
-//            User pavan = new User("psam", "Pavan", "Samaranayake", "psam@xstream.com");
-//            User test = new User("test", "John", "Doe", "jdoe@xstream.com");
+            userService.addRoleToUser("psam", "ADMIN");
+            userService.addRoleToUser("psam", "USER");
+            userService.addRoleToUser("jdoe", "USER");
 
 
             Artist artist = new Artist("The Weeknd", "Canada", "Pop/R&B");
@@ -77,45 +72,45 @@ public class Config {
             albumRepository.saveAll(List.of(weekndAlbum, weekndAlbum1, pAlbum, cpAlbum, jtAlbum));
             SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
-            //System.out.println(yearFormat.parse(Integer.toString(1996)));
-            Song song=new Song("Can't Feel My Face",240,"Pop");
+            Song song = new Song("Can't Feel My Face", 240, "Pop");
             song.getAlbums().add(weekndAlbum);
             weekndAlbum.getSongs().add(song);
             song.setArtist(artist);
 
-            Song song1=new Song("The hills",270,"Pop");
+            Song song1 = new Song("The hills", 270, "Pop");
             song1.getAlbums().add(weekndAlbum);
             weekndAlbum.getSongs().add(song1);
             song1.setArtist(artist);
 
-            Song song3=new Song("Jeremy",450,"Grunge");
+            Song song3 = new Song("Jeremy", 450, "Grunge");
             song3.getAlbums().add(pAlbum);
             pAlbum.getSongs().add(song3);
             song3.setArtist(artist3);
 
-            songRepository.saveAll(List.of(song1,song,song3));
+            songRepository.saveAll(List.of(song1, song, song3));
 
 
             //playlists
-            Playlist playlist1=new Playlist("Pop Songs");
+            Playlist playlist1 = new Playlist("Pop Songs");
             playlist1.setUser(pavan);
-           //pavan.getUserPlaylists().add(playlist1);
+            //pavan.getUserPlaylists().add(playlist1);
 
             playlist1.getPlaylistSongs().add(song);
             playlist1.getPlaylistSongs().add(song1);
 
-            Playlist playlist2=new Playlist("ROCK");
+            Playlist playlist2 = new Playlist("ROCK");
             playlist2.setUser(john);
-           //test.getUserPlaylists().add(playlist2);
+            //test.getUserPlaylists().add(playlist2);
             playlist2.getPlaylistSongs().add(song3);
 
-        playlistRepository.saveAll(List.of(playlist1,playlist2));
-        //playlistRepository.deleteAllByUser(test);
-       //userRepository.delete(test);
+            playlistRepository.saveAll(List.of(playlist1, playlist2));
+            //playlistRepository.deleteAllByUser(test);
+            //userRepository.delete(test);
 
             //pavan.setEmail("pavan@xtream.com");
         };
     }
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

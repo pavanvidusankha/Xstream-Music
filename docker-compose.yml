@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  app:
+    container_name: xstream
+    image: springboot-postgresql
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+  postgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=xstream
+#version: "3.7"
+#services:
+#  api_service:
+#    build: .
+#    restart: always
+#    ports:
+#      - 8080:8080
+#    depends_on:
+#      - postgres_db
+#  postgres_db:
+#    image: "postgres"
+#    restart: always
+#    ports:
+#      - 5433:5432
+#    environment:
+#      POSTGRES_DB: xstream
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_USER: postgres
