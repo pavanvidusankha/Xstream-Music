@@ -66,11 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/security/login").hasAnyAuthority("USER");
-        http.authorizeRequests().antMatchers(HttpMethod.GET,"/users").hasAuthority("ADMIN");
-        http.authorizeRequests().antMatchers(HttpMethod.POST,"/users").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/users/").hasAuthority("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/users/").hasAnyAuthority("ADMIN");
         //http.authorizeRequests().anyRequest().permitAll();
 //        http.authorizeRequests().antMatchers("/security/tokens").;
-        http.authorizeRequests().antMatchers("/login","/security/tokens","/swagger-ui").permitAll();
+        http.authorizeRequests().antMatchers("/login","/security/tokens","/swagger-ui/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
