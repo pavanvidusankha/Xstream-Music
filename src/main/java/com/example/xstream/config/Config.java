@@ -48,9 +48,7 @@ public class Config {
             Artist artist1 = new Artist("Charlie Puth", "USA", "Pop/R&B");
             Artist artist2 = new Artist("Justin Timberlake", "USA", "Pop");
             Artist artist3 = new Artist("Pearl Jam", "USA", "Grunge Rock");
-//            userRepository.saveAll(
-//                    List.of(pavan, test)
-//            );
+
             artistRepository.saveAll(List.of(artist, artist1, artist2, artist3));
 
             Album weekndAlbum = new Album("Beauty behind the madness", "Pop/R&B", dateFormat.parse("2014-01-21"));
