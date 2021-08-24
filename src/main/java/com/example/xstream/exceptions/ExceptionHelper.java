@@ -77,6 +77,21 @@ public class ExceptionHelper extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(NoItemFoundException.class)
+    public ResponseEntity<Object> handleNoItemException(NoItemFoundException e){
+        return new ResponseEntity<> ("No item found in the database ", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RoleServiceException.class)
+    public ResponseEntity<Object> handleNoItemException(RoleServiceException e){
+        return new ResponseEntity<> ("There is an issue with role service layer", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UserServiceException.class)
+    public ResponseEntity<Object> handleNoItemException(UserServiceException e){
+        return new ResponseEntity<> ("There is an issue with user auth service layer", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return new ResponseEntity<> ("Request media type is unsupported", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
