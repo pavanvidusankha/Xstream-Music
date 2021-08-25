@@ -2,6 +2,7 @@ package com.example.xstream.controllers;
 
 import com.example.xstream.models.Song;
 import com.example.xstream.services.SongServiceImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 
 @RequestMapping("/")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 public class SongController {
     private final SongServiceImpl songService;

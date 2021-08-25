@@ -2,6 +2,7 @@ package com.example.xstream.controllers;
 
 import com.example.xstream.models.Album;
 import com.example.xstream.services.AlbumServiceImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping
 public class AlbumController {

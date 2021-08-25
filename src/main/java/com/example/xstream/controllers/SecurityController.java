@@ -5,6 +5,7 @@ import com.example.xstream.models.Role;
 import com.example.xstream.models.RoleUserDTO;
 import com.example.xstream.models.User;
 import com.example.xstream.services.interfaces.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/security")
 public class SecurityController {
     private final UserService userService;

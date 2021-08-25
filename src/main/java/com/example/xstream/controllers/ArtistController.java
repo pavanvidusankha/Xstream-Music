@@ -2,12 +2,14 @@ package com.example.xstream.controllers;
 
 import com.example.xstream.models.Artist;
 import com.example.xstream.services.ArtistServiceImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController(value = "/artists")
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping(path = "/artists")
 public class ArtistController {
     private final ArtistServiceImpl artistServiceImpl;
