@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController(value = "/artists")
 @RequestMapping(path = "/artists")
 public class ArtistController {
     private final ArtistServiceImpl artistServiceImpl;
